@@ -314,6 +314,136 @@ input { font:inherit; color:inherit; }
 .quiz-rate .qr-learning { color:var(--yellow); }
 .quiz-rate .qr-known { color:var(--green); }
 
+/* Test mode overlay */
+.test-overlay {
+  position:fixed; inset:0; background:var(--bg);
+  z-index:1001; display:none; flex-direction:column;
+}
+.test-overlay.active { display:flex; }
+.test-header {
+  padding:12px 20px; display:flex; align-items:center;
+  gap:12px; border-bottom:1px solid var(--bg3);
+  flex-shrink:0;
+}
+.test-header-left { display:flex; align-items:center; gap:12px; }
+.test-header-right { margin-left:auto; display:flex; align-items:center; gap:14px; font-size:13px; color:var(--text2); }
+.test-streak { color:var(--orange); font-weight:600; }
+.test-timer { font-variant-numeric:tabular-nums; }
+.test-timer.warning { color:var(--red); animation:pulse 1s infinite; }
+@keyframes pulse { 50% { opacity:0.5; } }
+.test-progress-bar { height:4px; background:var(--bg3); flex-shrink:0; }
+.test-progress-fill { height:100%; background:var(--accent); transition:width 0.3s; }
+.test-progress-dots { display:flex; gap:3px; padding:8px 20px; flex-wrap:wrap; flex-shrink:0; }
+.test-dot { width:8px; height:8px; border-radius:50%; background:var(--bg4); }
+.test-dot.answered { background:var(--accent); }
+.test-dot.correct { background:var(--green); }
+.test-dot.wrong { background:var(--red); }
+.test-dot.current { box-shadow:0 0 0 2px var(--accent2); }
+
+/* Test setup screen */
+.test-setup { padding:30px 20px; max-width:600px; margin:0 auto; overflow-y:auto; flex:1; }
+.test-setup h2 { margin-bottom:20px; }
+.test-setup-section { margin-bottom:20px; }
+.test-setup-section label { display:block; font-size:13px; color:var(--text2); margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+.test-chips { display:flex; gap:6px; flex-wrap:wrap; }
+.test-chip {
+  padding:8px 16px; border-radius:20px; font-size:13px; font-weight:500;
+  background:var(--bg2); border:1px solid var(--bg3); cursor:pointer; transition:all 0.15s;
+}
+.test-chip:hover { background:var(--bg3); }
+.test-chip.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.test-start-btn {
+  width:100%; padding:16px; background:var(--accent); color:#fff;
+  border-radius:var(--radius); font-size:16px; font-weight:600;
+  margin-top:24px; transition:all 0.15s;
+}
+.test-start-btn:hover { background:var(--accent2); }
+.test-start-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+/* Test question screen */
+.test-body { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; align-items:center; }
+.test-q-badges { display:flex; gap:8px; margin-bottom:12px; }
+.test-q-text { font-size:18px; font-weight:600; max-width:700px; text-align:center; margin-bottom:16px; line-height:1.5; }
+.test-q-code {
+  background:var(--bg2); border:1px solid var(--bg3); border-radius:8px;
+  padding:14px; margin-bottom:20px; max-width:700px; width:100%;
+  font-family:'JetBrains Mono','Fira Code',Consolas,monospace; font-size:13px;
+  line-height:1.6; white-space:pre-wrap; overflow-x:auto;
+}
+.test-q-hint { font-size:12px; color:var(--text2); margin-bottom:12px; }
+.test-options { max-width:700px; width:100%; }
+.test-option {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 16px; margin-bottom:8px;
+  background:var(--bg2); border:1px solid var(--bg3);
+  border-radius:var(--radius); cursor:pointer; transition:all 0.15s;
+  font-size:14px;
+}
+.test-option:hover { border-color:var(--bg4); background:var(--bg3); }
+.test-option.selected { border-color:var(--accent); background:rgba(108,92,231,0.1); }
+.test-option .indicator {
+  width:20px; height:20px; border-radius:50%; border:2px solid var(--bg4);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s;
+}
+.test-option.multi .indicator { border-radius:4px; }
+.test-option.selected .indicator { border-color:var(--accent); background:var(--accent); }
+.test-option.selected .indicator::after { content:""; display:block; }
+.test-option.selected:not(.multi) .indicator::after { width:8px; height:8px; border-radius:50%; background:#fff; }
+.test-option.selected.multi .indicator::after { content:"\2713"; color:#fff; font-size:13px; font-weight:700; }
+/* Review colors */
+.test-option.opt-correct { border-color:var(--green); background:rgba(0,184,148,0.1); }
+.test-option.opt-wrong { border-color:var(--red); background:rgba(225,112,85,0.1); }
+.test-option.opt-missed { border-color:var(--yellow); border-style:dashed; }
+.test-option.opt-correct .indicator { border-color:var(--green); background:var(--green); }
+.test-option.opt-wrong .indicator { border-color:var(--red); background:var(--red); }
+
+.test-nav { display:flex; gap:10px; padding:16px 20px; border-top:1px solid var(--bg3); flex-shrink:0; }
+.test-nav button {
+  flex:1; padding:12px; border-radius:var(--radius); font-size:14px; font-weight:600;
+  border:1px solid var(--bg3); transition:all 0.15s;
+}
+.test-nav button:hover { background:var(--bg3); }
+.test-nav .btn-finish { background:var(--accent); color:#fff; border-color:var(--accent); }
+.test-nav .btn-finish:hover { background:var(--accent2); }
+
+/* Test results screen */
+.test-results { flex:1; overflow-y:auto; padding:30px 20px; max-width:700px; margin:0 auto; width:100%; }
+.test-results-score { text-align:center; margin-bottom:30px; }
+.test-results-score .big-num { font-size:48px; font-weight:700; }
+.test-results-score .big-pct { font-size:24px; color:var(--text2); }
+.test-results-score .stars { font-size:28px; margin:8px 0; }
+.test-results-score .verdict { font-size:18px; font-weight:600; }
+.test-results-meta { display:flex; gap:20px; justify-content:center; margin-bottom:24px; font-size:14px; color:var(--text2); }
+.test-results-topics { margin-bottom:24px; }
+.test-results-topic {
+  display:flex; align-items:center; gap:10px; padding:10px 0;
+  border-bottom:1px solid var(--bg3); font-size:14px;
+}
+.test-results-topic .topic-bar { flex:1; height:6px; background:var(--bg3); border-radius:3px; overflow:hidden; }
+.test-results-topic .topic-bar-fill { height:100%; background:var(--green); border-radius:3px; }
+.test-errors-list { margin-bottom:24px; }
+.test-error-item {
+  padding:12px 16px; margin-bottom:8px; background:var(--bg2);
+  border:1px solid var(--bg3); border-radius:var(--radius);
+  cursor:pointer; transition:all 0.15s; font-size:14px;
+}
+.test-error-item:hover { border-color:var(--bg4); }
+.test-results-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.test-results-actions button {
+  flex:1; padding:14px; border-radius:var(--radius); font-size:14px; font-weight:600;
+  border:1px solid var(--bg3); transition:all 0.15s; min-width:140px;
+}
+.test-results-actions button:hover { background:var(--bg3); }
+.test-results-actions .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* Test review screen */
+.test-review { flex:1; overflow-y:auto; padding:20px; max-width:700px; margin:0 auto; width:100%; }
+.test-review-explanation {
+  margin-top:16px; padding:16px; background:var(--bg2);
+  border:1px solid var(--bg3); border-radius:var(--radius);
+  font-size:14px; line-height:1.7; color:var(--text2);
+}
+
 /* Filter pills */
 .filter-row {
   display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap;
@@ -451,6 +581,19 @@ input { font:inherit; color:inherit; }
 
   /* Dashboard */
   .progress-bar { height:5px; }
+
+  /* Test mode mobile */
+  .test-overlay { padding-top:env(safe-area-inset-top); }
+  .test-header { padding:10px 14px; }
+  .test-setup { padding:20px 14px; }
+  .test-q-text { font-size:15px; }
+  .test-q-code { font-size:12px; padding:10px; }
+  .test-option { padding:12px 14px; font-size:13px; }
+  .test-nav { padding:12px 14px; }
+  .test-nav button { padding:10px; font-size:13px; }
+  .test-results { padding:20px 14px; }
+  .test-results-score .big-num { font-size:36px; }
+  .test-progress-dots { padding:6px 14px; }
 }
 
 /* Animations */
@@ -496,6 +639,28 @@ input { font:inherit; color:inherit; }
       <button class="qr-learning" onclick="rateQuiz('learning')">Частично</button>
       <button class="qr-known" onclick="rateQuiz('known')">Знаю!</button>
     </div>
+  </div>
+</div>
+
+<div class="test-overlay" id="testOverlay">
+  <div class="test-header">
+    <div class="test-header-left">
+      <button style="font-size:24px" onclick="closeTest()">&#8592;</button>
+      <span style="font-weight:600" id="testTitle">&#128221; Тест</span>
+    </div>
+    <div class="test-header-right">
+      <span class="test-streak" id="testStreak"></span>
+      <span class="test-timer" id="testTimer"></span>
+      <span id="testProgressText"></span>
+    </div>
+  </div>
+  <div class="test-progress-bar"><div class="test-progress-fill" id="testProgressBar"></div></div>
+  <div class="test-progress-dots" id="testDots"></div>
+  <div id="testContent"></div>
+  <div class="test-nav" id="testNav" style="display:none">
+    <button onclick="testPrev()">&#8592; Назад</button>
+    <button onclick="testNext()">Далее &#8594;</button>
+    <button class="btn-finish" onclick="finishTest()">&#10003; Завершить</button>
   </div>
 </div>
 
@@ -1038,6 +1203,204 @@ const TOPICS = [
 ];
 
 // ============================================================
+// QUIZ BANK (test mode with options)
+// ============================================================
+const QUIZ_BANK = [
+  // === Core Java ===
+  {id:"core-001",topic:"core",lvl:1,type:"single",q:"Какой принцип ООП позволяет скрыть внутреннее состояние объекта?",options:["Наследование","Полиморфизм","Инкапсуляция","Абстракция","Композиция"],correct:[2],explanation:"Инкапсуляция — сокрытие внутреннего состояния, доступ через методы (getters/setters). Абстракция — выделение значимых характеристик, но НЕ про сокрытие."},
+  {id:"core-002",topic:"core",lvl:2,type:"single",q:"Что выведет этот код?",code:"Integer a = 128;\nInteger b = 128;\nSystem.out.println(a == b);",options:["true","false","Ошибка компиляции","NullPointerException","Зависит от JVM"],correct:[1],explanation:"false — Integer cache работает для -128..127. Для 128 создаются два разных объекта, == сравнивает ссылки."},
+  {id:"core-003",topic:"core",lvl:1,type:"single",q:"Какой модификатор доступа позволяет обращаться к полю только внутри класса?",options:["public","protected","default (package-private)","private","final"],correct:[3],explanation:"private — доступ только внутри класса. protected — пакет + наследники. default — только пакет."},
+  {id:"core-004",topic:"core",lvl:2,type:"single",q:"Что выведет этот код?",code:"String s1 = \"hello\";\nString s2 = new String(\"hello\");\nSystem.out.println(s1 == s2);\nSystem.out.println(s1.equals(s2));",options:["true true","false false","false true","true false","Ошибка компиляции"],correct:[2],explanation:"== сравнивает ссылки: s1 из пула строк, s2 — новый объект в heap. equals() сравнивает содержимое."},
+  {id:"core-005",topic:"core",lvl:2,type:"multi",q:"Какие из этих типов являются примитивными в Java?",options:["int","Integer","String","boolean","char"],correct:[0,3,4],explanation:"int, boolean, char — примитивы. Integer — wrapper-класс. String — объект (ссылочный тип)."},
+  {id:"core-006",topic:"core",lvl:1,type:"single",q:"Какой принцип SOLID гласит: класс должен иметь только одну причину для изменения?",options:["Open/Closed","Liskov Substitution","Single Responsibility","Interface Segregation","Dependency Inversion"],correct:[2],explanation:"Single Responsibility Principle (SRP) — класс отвечает за одну задачу и имеет одну причину для изменения."},
+  {id:"core-007",topic:"core",lvl:2,type:"single",q:"Что произойдёт при выполнении?",code:"try {\n  return 1;\n} finally {\n  return 2;\n}",options:["Вернёт 1","Вернёт 2","Ошибка компиляции","StackOverflowError","Undefined behavior"],correct:[1],explanation:"finally блок выполняется ВСЕГДА. return в finally перезаписывает return из try. Результат: 2."},
+  {id:"core-008",topic:"core",lvl:3,type:"single",q:"Какой результат?",code:"double d = 0.1 + 0.2;\nSystem.out.println(d == 0.3);",options:["true","false","Ошибка компиляции","0.3","NaN"],correct:[1],explanation:"false — из-за IEEE 754: 0.1 + 0.2 = 0.30000000000000004. Для точных вычислений используйте BigDecimal."},
+  {id:"core-009",topic:"core",lvl:1,type:"single",q:"Что такое полиморфизм?",options:["Сокрытие данных внутри класса","Создание подкласса из суперкласса","Единый интерфейс для разных реализаций","Разделение интерфейса на части","Зависимость от абстракций"],correct:[2],explanation:"Полиморфизм — единый интерфейс для разных типов. Объект подкласса может использоваться через ссылку на суперкласс."},
+  {id:"core-010",topic:"core",lvl:2,type:"multi",q:"Какие утверждения верны про HashMap?",options:["Допускает null ключ","Потокобезопасна","Гарантирует порядок элементов","Использует hashCode() и equals()","Допускает null значения"],correct:[0,3,4],explanation:"HashMap: допускает 1 null ключ, множество null значений, использует hashCode()/equals(). НЕ потокобезопасна, НЕ гарантирует порядок."},
+  {id:"core-011",topic:"core",lvl:2,type:"single",q:"Какой результат?",code:"List<String> list = List.of(\"a\", \"b\");\nlist.add(\"c\");",options:["[a, b, c]","[a, b]","UnsupportedOperationException","Ошибка компиляции","NullPointerException"],correct:[2],explanation:"List.of() создаёт immutable (неизменяемый) список. Попытка add() выбросит UnsupportedOperationException."},
+  {id:"core-012",topic:"core",lvl:3,type:"single",q:"Какой GC пауза минимальна?",options:["Serial GC","Parallel GC","G1 GC","ZGC","CMS (deprecated)"],correct:[3],explanation:"ZGC (с Java 15+) обеспечивает паузы < 1мс независимо от размера heap. G1 — milliseconds, но больше. Serial/Parallel — stop-the-world."},
+  // === Collections ===
+  {id:"col-001",topic:"collections",lvl:1,type:"single",q:"Какая коллекция НЕ допускает дублирование элементов?",options:["ArrayList","LinkedList","HashSet","HashMap","ArrayDeque"],correct:[2],explanation:"HashSet — реализация Set, который не допускает дубликатов. ArrayList и LinkedList — List (допускают). HashMap — Map (ключи уникальны)."},
+  {id:"col-002",topic:"collections",lvl:2,type:"single",q:"Какая сложность операции get(index) у ArrayList?",options:["O(1)","O(log n)","O(n)","O(n log n)","O(n^2)"],correct:[0],explanation:"ArrayList основан на массиве — доступ по индексу за O(1). У LinkedList get(index) = O(n)."},
+  {id:"col-003",topic:"collections",lvl:2,type:"multi",q:"Какие коллекции сохраняют порядок вставки?",options:["HashSet","LinkedHashSet","TreeSet","ArrayList","HashMap"],correct:[1,3],explanation:"LinkedHashSet и ArrayList сохраняют порядок вставки. HashSet/HashMap — нет. TreeSet — сортированный порядок (не вставки)."},
+  {id:"col-004",topic:"collections",lvl:2,type:"single",q:"Что произойдёт при изменении объекта-ключа HashMap после вставки?",options:["Ничего страшного","Элемент будет автоматически перемещён","Элемент станет недоступен по get()","ConcurrentModificationException","HashMap автоматически пересчитает hash"],correct:[2],explanation:"Если hashCode() ключа изменится, элемент окажется в неправильном бакете и get() его не найдёт. Ключи должны быть immutable."},
+  {id:"col-005",topic:"collections",lvl:2,type:"single",q:"Какая структура данных лежит в основе HashMap (Java 8+)?",options:["Только массив","Массив + связные списки","Массив + связные списки + красно-чёрные деревья","B-дерево","Skip list"],correct:[2],explanation:"Java 8+: массив бакетов + связные списки, которые превращаются в красно-чёрные деревья при >8 элементов в бакете (TREEIFY_THRESHOLD)."},
+  // === Stream API ===
+  {id:"str-001",topic:"streams",lvl:1,type:"single",q:"Какая операция Stream является терминальной?",options:["filter()","map()","sorted()","collect()","flatMap()"],correct:[3],explanation:"collect() — терминальная операция, запускает pipeline. filter, map, sorted, flatMap — промежуточные (ленивые)."},
+  {id:"str-002",topic:"streams",lvl:2,type:"single",q:"Что выведет код?",code:"Stream.of(1, 2, 3, 4, 5)\n  .filter(n -> n > 2)\n  .map(n -> n * 2)\n  .findFirst()\n  .orElse(0);",options:["6","2","8","0","10"],correct:[0],explanation:"filter оставляет 3,4,5. map превращает в 6,8,10. findFirst() возвращает 6."},
+  {id:"str-003",topic:"streams",lvl:2,type:"multi",q:"Какие операции Stream являются промежуточными?",options:["forEach()","peek()","reduce()","distinct()","count()"],correct:[1,3],explanation:"peek() и distinct() — промежуточные. forEach(), reduce(), count() — терминальные."},
+  // === Multithreading ===
+  {id:"thr-001",topic:"threads",lvl:2,type:"multi",q:"Какие из перечисленных коллекций потокобезопасны?",options:["ArrayList","ConcurrentHashMap","HashMap","CopyOnWriteArrayList","LinkedList"],correct:[1,3],explanation:"ConcurrentHashMap и CopyOnWriteArrayList из java.util.concurrent. ArrayList, HashMap, LinkedList — НЕ потокобезопасны."},
+  {id:"thr-002",topic:"threads",lvl:2,type:"single",q:"Что делает volatile в Java?",options:["Запрещает изменение переменной","Гарантирует атомарность операций","Гарантирует видимость изменений между потоками","Блокирует доступ к переменной","Делает переменную потокобезопасной для любых операций"],correct:[2],explanation:"volatile гарантирует visibility — изменения видны другим потокам сразу. НЕ гарантирует атомарность (i++ НЕ атомарна даже с volatile)."},
+  {id:"thr-003",topic:"threads",lvl:2,type:"single",q:"Какое состояние потока означает ожидание монитора?",options:["NEW","RUNNABLE","BLOCKED","WAITING","TERMINATED"],correct:[2],explanation:"BLOCKED — поток ждёт получения монитора (synchronized блок занят другим потоком). WAITING — ждёт notify(). RUNNABLE — выполняется или готов."},
+  {id:"thr-004",topic:"threads",lvl:3,type:"single",q:"Что произойдёт?",code:"ExecutorService ex = Executors.newFixedThreadPool(2);\nfor (int i = 0; i < 5; i++) {\n  ex.submit(() -> {\n    Thread.sleep(1000);\n    System.out.print(\"*\");\n  });\n}",options:["Выведет 5 звёзд одновременно","Выведет 5 звёзд по 2 одновременно","Ошибка компиляции","Выведет 2 звезды и зависнет","InterruptedException"],correct:[1],explanation:"Пул из 2 потоков. Первые 2 задачи выполнятся через 1с, потом следующие 2, потом последняя. Итого 5 звёзд, но порциями по 2. Примечание: sleep в лямбде требует обработки checked exception."},
+  // === SQL ===
+  {id:"sql-001",topic:"sql",lvl:1,type:"single",q:"Какой JOIN вернёт только совпадающие строки из обеих таблиц?",options:["LEFT JOIN","RIGHT JOIN","INNER JOIN","FULL OUTER JOIN","CROSS JOIN"],correct:[2],explanation:"INNER JOIN — только строки с совпадением в обеих таблицах. LEFT — все из левой + совпадения. CROSS — декартово произведение."},
+  {id:"sql-002",topic:"sql",lvl:2,type:"single",q:"Какой уровень изоляции предотвращает фантомное чтение?",options:["READ UNCOMMITTED","READ COMMITTED","REPEATABLE READ","SERIALIZABLE","Все уровни"],correct:[3],explanation:"SERIALIZABLE — максимальный уровень, предотвращает phantom reads. REPEATABLE READ предотвращает non-repeatable reads, но не фантомы (в стандарте SQL; в InnoDB MySQL — предотвращает)."},
+  {id:"sql-003",topic:"sql",lvl:1,type:"multi",q:"Какие команды относятся к DDL?",options:["SELECT","CREATE TABLE","INSERT","ALTER TABLE","DROP TABLE"],correct:[1,3,4],explanation:"DDL (Data Definition Language): CREATE, ALTER, DROP, TRUNCATE. DML: SELECT, INSERT, UPDATE, DELETE."},
+  {id:"sql-004",topic:"sql",lvl:2,type:"single",q:"Что делает индекс в базе данных?",options:["Шифрует данные","Ускоряет SELECT запросы за счёт дополнительного хранилища","Гарантирует уникальность всех значений","Автоматически партиционирует таблицу","Блокирует конкурентный доступ"],correct:[1],explanation:"Индекс — структура (обычно B-tree), ускоряющая поиск. Занимает место и замедляет INSERT/UPDATE. Уникальность — только UNIQUE INDEX."},
+  // === Hibernate/JPA ===
+  {id:"jpa-001",topic:"jpa",lvl:1,type:"single",q:"Какая аннотация определяет первичный ключ сущности JPA?",options:["@Entity","@Table","@Id","@Column","@GeneratedValue"],correct:[2],explanation:"@Id — помечает поле как первичный ключ. @Entity — помечает класс как сущность. @GeneratedValue — стратегия генерации ID."},
+  {id:"jpa-002",topic:"jpa",lvl:2,type:"single",q:"Какой тип fetch по умолчанию для @ManyToOne?",options:["LAZY","EAGER","NONE","AUTO","BATCH"],correct:[1],explanation:"@ManyToOne и @OneToOne — EAGER по умолчанию. @OneToMany и @ManyToMany — LAZY по умолчанию. Best practice: всегда указывать LAZY явно."},
+  {id:"jpa-003",topic:"jpa",lvl:2,type:"single",q:"Что такое N+1 проблема в Hibernate?",options:["Ошибка маппинга N сущностей","1 запрос для списка + N запросов для каждого связанного объекта","Ограничение на количество JOIN","Проблема с кешем первого уровня","Конфликт транзакций"],correct:[1],explanation:"N+1: 1 запрос загружает N сущностей, потом для каждой делается отдельный запрос за связанными объектами. Решение: JOIN FETCH, @EntityGraph, @BatchSize."},
+  // === Spring ===
+  {id:"spr-001",topic:"spring",lvl:1,type:"single",q:"Какой scope бина Spring создаёт один экземпляр на всё приложение?",options:["prototype","request","session","singleton","application"],correct:[3],explanation:"singleton — один экземпляр на Spring контейнер (по умолчанию). prototype — новый экземпляр при каждом запросе бина."},
+  {id:"spr-002",topic:"spring",lvl:2,type:"single",q:"Что делает аннотация @Transactional(readOnly=true)?",options:["Запрещает чтение данных","Оптимизирует: Hibernate не делает dirty checking","Создаёт read lock на таблицы","Отключает транзакцию","Использует SERIALIZABLE изоляцию"],correct:[1],explanation:"readOnly=true — подсказка: Hibernate пропускает dirty checking (flush mode MANUAL), что ускоряет чтение. НЕ блокирует запись на уровне БД."},
+  {id:"spr-003",topic:"spring",lvl:2,type:"multi",q:"Какие из этих аннотаций являются стереотипами Spring?",options:["@Component","@Service","@Transactional","@Repository","@Autowired"],correct:[0,1,3],explanation:"Стереотипы: @Component, @Service, @Repository, @Controller. @Transactional — аспект транзакций. @Autowired — внедрение зависимостей."},
+  {id:"spr-004",topic:"spring",lvl:2,type:"single",q:"В каком случае @Transactional НЕ сработает?",options:["На public методе","При вызове из другого бина","При вызове метода из того же класса (self-invocation)","На методе с параметрами","В @Service классе"],correct:[2],explanation:"Self-invocation: вызов @Transactional метода из того же класса обходит прокси. Spring AOP создаёт прокси-обёртку, а внутренний вызов идёт напрямую."},
+  {id:"spr-005",topic:"spring",lvl:1,type:"single",q:"Какой паттерн лежит в основе Spring IoC контейнера?",options:["Singleton","Factory","Dependency Injection","Observer","Strategy"],correct:[2],explanation:"IoC (Inversion of Control) реализуется через Dependency Injection — контейнер сам создаёт и внедряет зависимости через конструктор, сеттер или поле."},
+  // === Kafka ===
+  {id:"kfk-001",topic:"kafka",lvl:1,type:"single",q:"Что такое partition в Kafka?",options:["Копия данных на другом брокере","Упорядоченная последовательность сообщений внутри топика","Группа консьюмеров","Буфер для продюсера","Индекс сообщений"],correct:[1],explanation:"Partition — упорядоченная immutable последовательность сообщений. Топик разделён на партиции для параллелизма. Порядок гарантирован ВНУТРИ партиции."},
+  {id:"kfk-002",topic:"kafka",lvl:2,type:"single",q:"Что означает acks=all у Kafka продюсера?",options:["Сообщение не требует подтверждения","Подтверждение от leader-а","Подтверждение от leader + всех in-sync реплик","Подтверждение от всех брокеров кластера","Подтверждение от консьюмера"],correct:[2],explanation:"acks=all (-1) — leader ждёт подтверждения от всех ISR (in-sync replicas). Максимальная надёжность, но выше latency. acks=1 — только leader."},
+  {id:"kfk-003",topic:"kafka",lvl:2,type:"single",q:"Что произойдёт, если консьюмеров в группе больше, чем партиций?",options:["Сообщения дублируются","Лишние консьюмеры будут idle","Ошибка конфигурации","Kafka автоматически создаст партиции","Round-robin между всеми"],correct:[1],explanation:"В consumer group каждая партиция назначается ровно одному консьюмеру. Если консьюмеров больше — лишние простаивают (idle)."},
+  // === Архитектура ===
+  {id:"arch-001",topic:"arch",lvl:1,type:"single",q:"Что такое микросервисная архитектура?",options:["Один большой деплой","Набор мелких независимых сервисов с отдельными БД","Архитектура с общей базой данных","Клиент-серверная архитектура","Монолит с модулями"],correct:[1],explanation:"Микросервисы — независимые сервисы, каждый со своей БД, деплоятся отдельно, общаются через API/events. Противоположность монолиту."},
+  {id:"arch-002",topic:"arch",lvl:2,type:"single",q:"Какой паттерн решает проблему распределённых транзакций?",options:["Singleton","Circuit Breaker","Saga","Repository","CQRS"],correct:[2],explanation:"Saga — последовательность локальных транзакций с компенсирующими действиями при ошибке. Виды: хореография (события) и оркестрация (координатор)."},
+  {id:"arch-003",topic:"arch",lvl:2,type:"multi",q:"Какие паттерны относятся к отказоустойчивости?",options:["Circuit Breaker","Singleton","Retry","Bulkhead","Factory"],correct:[0,2,3],explanation:"Circuit Breaker, Retry, Bulkhead — паттерны resilience. Singleton и Factory — порождающие паттерны GoF."},
+  // === Паттерны ===
+  {id:"pat-001",topic:"patterns",lvl:1,type:"single",q:"Какой паттерн гарантирует единственный экземпляр класса?",options:["Factory","Builder","Singleton","Prototype","Adapter"],correct:[2],explanation:"Singleton — один экземпляр на приложение. В Spring все бины singleton по умолчанию. Потокобезопасная реализация: enum, holder class, или double-checked locking."},
+  {id:"pat-002",topic:"patterns",lvl:2,type:"single",q:"Какой паттерн используется в java.util.stream.Stream?",options:["Iterator","Builder","Strategy","Chain of Responsibility","Decorator"],correct:[1],explanation:"Stream API использует Builder pattern (цепочка методов строит pipeline). Также Pipeline/Pipes-and-Filters. Каждая промежуточная операция возвращает новый Stream."},
+  // === Тестирование ===
+  {id:"tst-001",topic:"test",lvl:1,type:"single",q:"Какая аннотация JUnit 5 помечает тестовый метод?",options:["@Test","@RunWith","@TestClass","@Verify","@Check"],correct:[0],explanation:"@Test (org.junit.jupiter.api.Test) — помечает метод как тест в JUnit 5. @RunWith — JUnit 4. В JUnit 5 вместо него @ExtendWith."},
+  {id:"tst-002",topic:"test",lvl:2,type:"multi",q:"Какие фреймворки используют для мокирования?",options:["Mockito","JUnit","Testcontainers","WireMock","AssertJ"],correct:[0,3],explanation:"Mockito — мокирование Java объектов. WireMock — мокирование HTTP сервисов. JUnit — тестовый фреймворк. Testcontainers — реальные контейнеры. AssertJ — assertions."},
+  // === DevOps ===
+  {id:"dev-001",topic:"devops",lvl:1,type:"single",q:"Что такое Docker контейнер?",options:["Виртуальная машина","Изолированный процесс с собственной файловой системой","Физический сервер","Облачный инстанс","Java процесс"],correct:[1],explanation:"Контейнер — изолированный процесс, использующий namespaces и cgroups ядра Linux. Легче VM — делит ядро ОС. Образ (image) — шаблон, контейнер — запущенный экземпляр."},
+  {id:"dev-002",topic:"devops",lvl:2,type:"single",q:"Чем отличается CMD от ENTRYPOINT в Dockerfile?",options:["Ничем не отличается","CMD задаёт аргументы по умолчанию (можно переопределить), ENTRYPOINT — основную команду","ENTRYPOINT выполняется первым, CMD — последним","CMD обязателен, ENTRYPOINT — нет","CMD для production, ENTRYPOINT для development"],correct:[1],explanation:"ENTRYPOINT — основная команда контейнера. CMD — аргументы по умолчанию, переопределяются при docker run. Комбинация: ENTRYPOINT [\"java\", \"-jar\"], CMD [\"app.jar\"]."},
+  // === Безопасность ===
+  {id:"sec-001",topic:"security",lvl:1,type:"single",q:"Что такое JWT?",options:["Java Web Token","JSON Web Template","JSON Web Token","JavaScript Worker Thread","Java Websocket Transport"],correct:[2],explanation:"JWT (JSON Web Token) — стандарт (RFC 7519) для передачи claims между сторонами. Структура: Header.Payload.Signature (Base64). Используется для аутентификации."},
+  {id:"sec-002",topic:"security",lvl:2,type:"multi",q:"Какие атаки входят в OWASP Top 10?",options:["SQL Injection","Buffer Overflow в Java","XSS (Cross-Site Scripting)","Broken Authentication","Memory Leak"],correct:[0,2,3],explanation:"OWASP Top 10: Injection, Broken Auth, XSS, Insecure Deserialization и др. Buffer Overflow нетипичен для Java (managed memory). Memory Leak — не security атака."},
+  // === Сеть ===
+  {id:"net-001",topic:"protocols",lvl:1,type:"single",q:"Какой код HTTP означает успешное создание ресурса?",options:["200 OK","201 Created","204 No Content","301 Moved","400 Bad Request"],correct:[1],explanation:"201 Created — ресурс успешно создан (POST). 200 OK — общий успех. 204 No Content — успех без тела ответа (DELETE)."},
+  {id:"net-002",topic:"protocols",lvl:2,type:"single",q:"Чем REST отличается от gRPC?",options:["REST быстрее","gRPC использует JSON","REST использует HTTP/1.1 + JSON, gRPC — HTTP/2 + Protobuf","Они идентичны","REST поддерживает стриминг, gRPC — нет"],correct:[2],explanation:"REST: HTTP/1.1, JSON, текстовый. gRPC: HTTP/2, Protocol Buffers (бинарный), поддерживает bidirectional streaming. gRPC быстрее для межсервисного общения."},
+  // === Core Java (continued) ===
+  {id:"core-013",topic:"core",lvl:1,type:"single",q:"Что будет, если не переопределить hashCode() при переопределённом equals()?",options:["Ничего страшного","Объекты нельзя будет сравнивать","Нарушится контракт HashMap — equals-объекты попадут в разные бакеты","Ошибка компиляции","ClassCastException"],correct:[2],explanation:"Контракт: если a.equals(b), то a.hashCode() == b.hashCode(). Без этого HashMap не найдёт объект, т.к. он попадёт в другой бакет."},
+  {id:"core-014",topic:"core",lvl:2,type:"single",q:"Какой результат?",code:"String s = \"Java\";\ns.concat(\" 21\");\nSystem.out.println(s);",options:["Java 21","Java","null","Ошибка компиляции","Java Java 21"],correct:[1],explanation:"String immutable! concat() возвращает НОВЫЙ объект, но результат не присвоен. s по-прежнему \"Java\"."},
+  {id:"core-015",topic:"core",lvl:2,type:"multi",q:"Какие утверждения верны про interface в Java 8+?",options:["Может содержать default методы","Может содержать static методы","Может содержать конструкторы","Может содержать private методы (Java 9+)","Все методы обязательно public"],correct:[0,1,3],explanation:"Java 8: default и static методы. Java 9: private методы. Конструкторов в интерфейсе нет. С Java 9 методы могут быть private."},
+  {id:"core-016",topic:"core",lvl:3,type:"single",q:"Что такое happens-before в Java Memory Model?",options:["Порядок выполнения строк кода","Гарантия, что результат одной операции видим другой","Приоритет потоков","Порядок загрузки классов","Очерёдность в synchronized блоке"],correct:[1],explanation:"Happens-before — отношение между операциями, гарантирующее видимость записи для чтения. Примеры: unlock → lock, volatile write → volatile read, thread start/join."},
+  {id:"core-017",topic:"core",lvl:1,type:"single",q:"Какой класс является родительским для всех классов в Java?",options:["Class","Base","Root","Object","Main"],correct:[3],explanation:"java.lang.Object — корень иерархии классов. Все классы неявно наследуют Object. Методы: equals, hashCode, toString, clone, wait, notify, finalize."},
+  {id:"core-018",topic:"core",lvl:2,type:"single",q:"Что выведет код?",code:"int[] arr = {1, 2, 3};\nint[] copy = arr;\ncopy[0] = 99;\nSystem.out.println(arr[0]);",options:["1","99","0","ArrayIndexOutOfBoundsException","Ошибка компиляции"],correct:[1],explanation:"Массивы — ссылочные типы. copy и arr указывают на один и тот же объект в heap. Изменение через copy видно через arr."},
+  {id:"core-019",topic:"core",lvl:2,type:"single",q:"Чем abstract class отличается от interface?",options:["abstract class может иметь состояние (поля), interface — нет","Они идентичны с Java 8","interface может иметь конструктор","abstract class не может иметь методы","interface быстрее"],correct:[0],explanation:"abstract class: поля экземпляра, конструкторы, любые модификаторы. interface: только константы (public static final), default/static/private методы. Класс может implements несколько interfaces, но extends один класс."},
+  {id:"core-020",topic:"core",lvl:1,type:"multi",q:"Какие методы определены в классе Object?",options:["equals()","compareTo()","hashCode()","toString()","iterator()"],correct:[0,2,3],explanation:"Object: equals(), hashCode(), toString(), clone(), getClass(), wait(), notify(), notifyAll(), finalize(). compareTo() — из Comparable, iterator() — из Iterable."},
+  {id:"core-021",topic:"core",lvl:2,type:"single",q:"Что выведет код?",code:"System.out.println(1 + 2 + \"3\");\nSystem.out.println(\"1\" + 2 + 3);",options:["33 и 123","33 и 33","123 и 123","5 и 6","33 и 6"],correct:[0],explanation:"Первая строка: 1+2=3, потом 3+\"3\"=\"33\". Вторая: \"1\"+2=\"12\", потом \"12\"+3=\"123\". Конкатенация строк идёт слева направо."},
+  {id:"core-022",topic:"core",lvl:3,type:"single",q:"Какой паттерн используется в try-with-resources?",options:["Strategy","Template Method","Observer","RAII / Resource Management","Decorator"],correct:[3],explanation:"try-with-resources реализует RAII (Resource Acquisition Is Initialization) — автоматическое закрытие ресурсов через AutoCloseable.close(). Ресурс закрывается в finally неявно."},
+  {id:"core-023",topic:"core",lvl:2,type:"single",q:"Что такое Diamond Problem и как Java его решает?",options:["Проблема с дженериками","Конфликт методов при множественном наследовании — Java запрещает множественное наследование классов","Проблема сборки мусора","Конфликт имён пакетов","Проблема с сериализацией"],correct:[1],explanation:"Diamond Problem: два суперкласса имеют одинаковый метод. Java решает: запрет множественного наследования классов (только один extends). С interface default methods — нужно явно переопределить конфликтующий метод."},
+  {id:"core-024",topic:"core",lvl:2,type:"single",q:"Какой результат?",code:"Optional<String> opt = Optional.ofNullable(null);\nSystem.out.println(opt.orElse(\"default\"));",options:["null","default","NullPointerException","Optional.empty","Ошибка компиляции"],correct:[1],explanation:"Optional.ofNullable(null) создаёт пустой Optional. orElse() возвращает значение по умолчанию, если Optional пуст."},
+  {id:"core-025",topic:"core",lvl:1,type:"single",q:"Что такое autoboxing в Java?",options:["Упаковка объектов в контейнеры","Автоматическое преобразование примитива в wrapper-объект","Сжатие данных","Автоматическая сериализация","Кэширование объектов"],correct:[1],explanation:"Autoboxing: int → Integer автоматически. Unboxing: Integer → int. Внимание: unboxing null выбросит NullPointerException."},
+  // === Collections (continued) ===
+  {id:"col-006",topic:"collections",lvl:1,type:"single",q:"Какая коллекция реализует очередь FIFO?",options:["Stack","ArrayList","LinkedList (как Queue)","TreeSet","HashMap"],correct:[2],explanation:"LinkedList реализует интерфейс Queue (FIFO). Stack — LIFO. ArrayDeque — также FIFO/LIFO, но эффективнее LinkedList."},
+  {id:"col-007",topic:"collections",lvl:2,type:"single",q:"Чем TreeMap отличается от HashMap?",options:["TreeMap быстрее","TreeMap хранит элементы отсортированными по ключу","HashMap не допускает null ключей","TreeMap основана на hash таблице","Они идентичны"],correct:[1],explanation:"TreeMap: Red-Black Tree, O(log n), сортировка по ключу (Comparable/Comparator). HashMap: hash table, O(1) amortized, без порядка. TreeMap не допускает null ключей."},
+  {id:"col-008",topic:"collections",lvl:2,type:"single",q:"Что произойдёт?",code:"List<Integer> list = Arrays.asList(1, 2, 3);\nlist.add(4);",options:["[1, 2, 3, 4]","UnsupportedOperationException","Ошибка компиляции","[4, 1, 2, 3]","NullPointerException"],correct:[1],explanation:"Arrays.asList() возвращает fixed-size список (обёртку над массивом). add()/remove() выбросят UnsupportedOperationException. Для mutable: new ArrayList<>(Arrays.asList(...))."},
+  {id:"col-009",topic:"collections",lvl:3,type:"single",q:"Какой load factor по умолчанию у HashMap?",options:["0.5","0.7","0.75","1.0","Зависит от размера"],correct:[2],explanation:"Default load factor = 0.75 (capacity * 0.75 = threshold для resize). Initial capacity = 16. При 12 элементах (16*0.75) произойдёт resize до 32."},
+  {id:"col-010",topic:"collections",lvl:2,type:"multi",q:"Какие коллекции реализуют интерфейс Deque?",options:["ArrayList","ArrayDeque","LinkedList","PriorityQueue","Stack"],correct:[1,2],explanation:"Deque (double-ended queue): ArrayDeque и LinkedList. ArrayDeque быстрее для stack/queue (нет overhead на nodes). PriorityQueue — не Deque, а priority heap."},
+  {id:"col-011",topic:"collections",lvl:2,type:"single",q:"Как ConcurrentHashMap обеспечивает потокобезопасность в Java 8+?",options:["synchronized на всей map","ReadWriteLock","CAS + synchronized на отдельных бакетах","Копирование при записи","Отсутствие блокировок"],correct:[2],explanation:"Java 8+: CAS (Compare-And-Swap) для вставки в пустой бакет + synchronized на первом узле непустого бакета. Нет блокировки всей map."},
+  {id:"col-012",topic:"collections",lvl:1,type:"single",q:"В чём разница между Comparable и Comparator?",options:["Comparable — внешняя сортировка, Comparator — внутренняя","Comparable определяет естественный порядок (compareTo в классе), Comparator — внешний (отдельный класс)","Comparable только для строк","Comparator быстрее","Они взаимозаменяемы"],correct:[1],explanation:"Comparable: интерфейс в самом классе (compareTo). Comparator: отдельный объект (compare). Comparable — один порядок, Comparator — множество."},
+  // === Stream API (continued) ===
+  {id:"str-004",topic:"streams",lvl:2,type:"single",q:"Что делает flatMap()?",options:["Фильтрует элементы","Преобразует каждый элемент в Stream и объединяет результаты в один поток","Сортирует элементы","Группирует элементы","Создаёт параллельный поток"],correct:[1],explanation:"flatMap: каждый элемент → Stream, все результаты объединяются (flatten). Пример: list.stream().flatMap(l -> l.stream()) — из списка списков в плоский список."},
+  {id:"str-005",topic:"streams",lvl:2,type:"single",q:"Чем reduce() отличается от collect()?",options:["Ничем","reduce — иммутабельная свёртка, collect — мутабельная аккумуляция","reduce быстрее","collect только для List","reduce только для чисел"],correct:[1],explanation:"reduce: создаёт новый результат на каждом шаге (immutable). collect: мутирует контейнер (StringBuilder, ArrayList). collect эффективнее для мутабельных результатов."},
+  {id:"str-006",topic:"streams",lvl:1,type:"single",q:"Что вернёт этот код?",code:"List.of(3, 1, 4, 1, 5).stream()\n  .distinct()\n  .sorted()\n  .collect(Collectors.toList());",options:["[3, 1, 4, 1, 5]","[1, 3, 4, 5]","[1, 1, 3, 4, 5]","[5, 4, 3, 1]","[3, 1, 4, 5]"],correct:[1],explanation:"distinct() убирает дубликаты: [3,1,4,5]. sorted() сортирует: [1,3,4,5]. collect собирает в List."},
+  {id:"str-007",topic:"streams",lvl:2,type:"multi",q:"Какие из этих операций являются short-circuiting (завершаются раньше)?",options:["filter()","findFirst()","anyMatch()","map()","limit()"],correct:[1,2,4],explanation:"Short-circuiting: findFirst, findAny, anyMatch, allMatch, noneMatch (терминальные), limit (промежуточная). filter и map обрабатывают все элементы."},
+  {id:"str-008",topic:"streams",lvl:3,type:"single",q:"В чём опасность параллельных стримов?",options:["Они всегда медленнее","Overhead на разделение и слияние + неподходящий источник данных (LinkedList) + thread-safety проблемы","Они не поддерживаются в Java 17","Параллельные стримы блокируют main thread","Они потребляют бесконечно много памяти"],correct:[1],explanation:"Проблемы: ForkJoinPool overhead, LinkedList плохо параллелится (нет random access), side-effects в лямбдах + общий ForkJoinPool.commonPool()."},
+  // === Multithreading (continued) ===
+  {id:"thr-005",topic:"threads",lvl:1,type:"single",q:"Чем synchronized отличается от ReentrantLock?",options:["Ничем","ReentrantLock позволяет tryLock, timeout, fairness, interruptible lock","synchronized быстрее всегда","ReentrantLock не поддерживает reentrant","synchronized работает только на статических методах"],correct:[1],explanation:"ReentrantLock: tryLock(), lockInterruptibly(), fair/unfair, multiple Conditions. synchronized: проще синтаксис, автоматический release. Оба reentrant."},
+  {id:"thr-006",topic:"threads",lvl:2,type:"single",q:"Что такое deadlock?",options:["Когда поток завершается неожиданно","Когда два потока ждут ресурсы друг друга и ни один не может продолжить","Когда поток выполняется слишком долго","Когда поток не может получить CPU time","Ошибка в synchronized блоке"],correct:[1],explanation:"Deadlock: поток A держит lock1 и ждёт lock2, поток B держит lock2 и ждёт lock1. Решение: единый порядок получения lock-ов, tryLock с timeout."},
+  {id:"thr-007",topic:"threads",lvl:2,type:"multi",q:"Какие классы/интерфейсы относятся к java.util.concurrent?",options:["CountDownLatch","synchronized","CompletableFuture","AtomicInteger","Thread"],correct:[0,2,3],explanation:"j.u.c: CountDownLatch, CompletableFuture, AtomicInteger, ConcurrentHashMap, ExecutorService и др. synchronized — ключевое слово языка. Thread — java.lang."},
+  {id:"thr-008",topic:"threads",lvl:3,type:"single",q:"Что делает CompletableFuture.supplyAsync()?",options:["Блокирует текущий поток","Выполняет задачу асинхронно и возвращает CompletableFuture с результатом","Создаёт новый Thread","Планирует задачу на определённое время","Выполняет задачу синхронно"],correct:[1],explanation:"supplyAsync — запускает Supplier в ForkJoinPool.commonPool() (или указанном Executor) и возвращает CompletableFuture. Можно чейнить: thenApply, thenCompose, handle."},
+  {id:"thr-009",topic:"threads",lvl:2,type:"single",q:"Что такое ThreadLocal?",options:["Локальная переменная в методе","Переменная, имеющая отдельную копию для каждого потока","Синхронизированная переменная","Кэш потока","Статическая переменная"],correct:[1],explanation:"ThreadLocal хранит отдельное значение для каждого потока. Пример: SimpleDateFormat (не thread-safe) в ThreadLocal. Осторожно с thread pools — нужно remove() после использования."},
+  {id:"thr-010",topic:"threads",lvl:2,type:"single",q:"Чем Future отличается от CompletableFuture?",options:["Ничем","CompletableFuture поддерживает цепочки (thenApply, thenCompose) и неблокирующие callbacks","Future быстрее","CompletableFuture только для Kotlin","Future поддерживает стриминг"],correct:[1],explanation:"Future: только get() (блокирующий), isDone(), cancel(). CompletableFuture: цепочки, комбинация (allOf, anyOf), обработка ошибок (exceptionally, handle)."},
+  // === SQL (continued) ===
+  {id:"sql-005",topic:"sql",lvl:1,type:"single",q:"Что делает GROUP BY?",options:["Сортирует результат","Группирует строки с одинаковыми значениями для агрегатных функций","Объединяет таблицы","Фильтрует результат","Ограничивает количество строк"],correct:[1],explanation:"GROUP BY группирует строки для агрегатных функций (COUNT, SUM, AVG, MAX, MIN). HAVING фильтрует группы (в отличие от WHERE, которая фильтрует до группировки)."},
+  {id:"sql-006",topic:"sql",lvl:2,type:"single",q:"Чем WHERE отличается от HAVING?",options:["Ничем","WHERE фильтрует строки до GROUP BY, HAVING — после (по агрегатным функциям)","HAVING быстрее","WHERE только для JOIN","HAVING заменяет WHERE в подзапросах"],correct:[1],explanation:"WHERE: фильтрация строк ДО группировки. HAVING: фильтрация ГРУПП после GROUP BY. HAVING может использовать агрегатные функции (COUNT, SUM)."},
+  {id:"sql-007",topic:"sql",lvl:2,type:"single",q:"Что такое ACID?",options:["Тип индекса","Формат данных","Свойства транзакции: Atomicity, Consistency, Isolation, Durability","Протокол репликации","Алгоритм сортировки"],correct:[2],explanation:"ACID: Atomicity (всё или ничего), Consistency (данные валидны после транзакции), Isolation (транзакции не мешают друг другу), Durability (результат сохранён даже при сбое)."},
+  {id:"sql-008",topic:"sql",lvl:2,type:"multi",q:"Какие проблемы решают уровни изоляции транзакций?",options:["Dirty Read","Deadlock","Non-Repeatable Read","Phantom Read","Memory Leak"],correct:[0,2,3],explanation:"Уровни изоляции решают: Dirty Read (READ COMMITTED+), Non-Repeatable Read (REPEATABLE READ+), Phantom Read (SERIALIZABLE). Deadlock — не проблема изоляции."},
+  {id:"sql-009",topic:"sql",lvl:2,type:"single",q:"Что такое оконная функция (window function)?",options:["Функция для создания окон в UI","Агрегатная функция, работающая на подмножестве строк без свёртки результата","Функция для работы с датами","Процедура в stored procedure","Функция шифрования"],correct:[1],explanation:"Window functions: ROW_NUMBER(), RANK(), LAG(), LEAD(), SUM() OVER(). Вычисляют значение для каждой строки на основе \"окна\" строк, не сворачивая результат (в отличие от GROUP BY)."},
+  // === JPA/Hibernate (continued) ===
+  {id:"jpa-004",topic:"jpa",lvl:2,type:"multi",q:"Какие стратегии генерации ID поддерживает JPA?",options:["IDENTITY","SEQUENCE","TABLE","RANDOM","UUID (нативная с Hibernate 6)"],correct:[0,1,2,4],explanation:"@GeneratedValue strategies: IDENTITY (auto-increment), SEQUENCE (DB sequence), TABLE (отдельная таблица), AUTO (провайдер выбирает). Hibernate 6+ поддерживает UUID нативно."},
+  {id:"jpa-005",topic:"jpa",lvl:2,type:"single",q:"Что такое persistence context в JPA?",options:["Конфигурационный файл","Кэш первого уровня — набор managed entities привязанных к EntityManager","База данных","Пул соединений","Транзакция"],correct:[1],explanation:"Persistence Context — L1 cache привязанный к EntityManager. Managed entity: отслеживается, dirty checking при flush. Detached — после close/clear EM."},
+  {id:"jpa-006",topic:"jpa",lvl:3,type:"single",q:"Что такое @EntityGraph и зачем он нужен?",options:["Визуализация схемы БД","Определение графа загрузки связанных сущностей для избежания N+1","Маршрутизация запросов","Кэширование запросов","Шардинг данных"],correct:[1],explanation:"@EntityGraph указывает, какие связи загружать в одном запросе (JOIN FETCH декларативно). Решает N+1 без изменения JPQL. attributePaths = {\"orders\", \"orders.items\"}."},
+  {id:"jpa-007",topic:"jpa",lvl:2,type:"single",q:"Чем merge() отличается от persist()?",options:["Ничем","persist — для новых (transient → managed), merge — для detached (detached → managed copy)","persist быстрее","merge только для UPDATE","persist только в @Transactional"],correct:[1],explanation:"persist(): transient → managed, INSERT. merge(): detached → managed (возвращает новый managed объект), INSERT или UPDATE. persist выбрасывает исключение, если entity уже имеет ID (зависит от стратегии)."},
+  // === Spring (continued) ===
+  {id:"spr-006",topic:"spring",lvl:1,type:"single",q:"Что делает @Autowired?",options:["Создаёт REST endpoint","Внедряет зависимость (бин) из Spring контейнера","Запускает транзакцию","Помечает класс как конфигурацию","Создаёт таблицу в БД"],correct:[1],explanation:"@Autowired — внедрение зависимостей. Способы: конструктор (рекомендуется), сеттер, поле. С Spring 4.3 @Autowired на конструкторе не обязателен, если он единственный."},
+  {id:"spr-007",topic:"spring",lvl:2,type:"single",q:"Как работает Spring AOP?",options:["Модифицирует байт-код при компиляции","Создаёт прокси-объекты (JDK Dynamic Proxy или CGLIB)","Использует reflection для каждого вызова","Модифицирует исходный код","Использует Java Agent"],correct:[1],explanation:"Spring AOP: JDK Dynamic Proxy (для интерфейсов) или CGLIB (для классов — наследование). Создаёт обёртку вокруг бина. Поэтому self-invocation обходит прокси."},
+  {id:"spr-008",topic:"spring",lvl:2,type:"multi",q:"Какие типы advice существуют в Spring AOP?",options:["@Before","@After","@Around","@Instead","@AfterReturning"],correct:[0,1,2,4],explanation:"Spring AOP advice: @Before, @After, @AfterReturning, @AfterThrowing, @Around. @Instead не существует. @Around — самый мощный, включает ProceedingJoinPoint."},
+  {id:"spr-009",topic:"spring",lvl:2,type:"single",q:"Какой HTTP метод для обновления всего ресурса в REST?",options:["POST","GET","PUT","PATCH","DELETE"],correct:[2],explanation:"PUT — полное обновление ресурса (идемпотентный). PATCH — частичное обновление. POST — создание. GET — чтение. DELETE — удаление."},
+  {id:"spr-010",topic:"spring",lvl:2,type:"single",q:"Что делает @ControllerAdvice?",options:["Логирует все запросы","Глобальная обработка исключений, привязка данных и model attributes для всех контроллеров","Кэширует ответы","Авторизует запросы","Валидирует входные данные"],correct:[1],explanation:"@ControllerAdvice — глобальный обработчик для контроллеров. @ExceptionHandler внутри — обработка исключений. Также @ModelAttribute и @InitBinder."},
+  {id:"spr-011",topic:"spring",lvl:3,type:"single",q:"Как Spring Boot автоконфигурация работает?",options:["Сканирует все классы проекта","Читает META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports и применяет @Conditional бины","Использует AI для определения конфигурации","Полностью конфигурируется вручную","Читает application.yml при каждом запросе"],correct:[1],explanation:"Автоконфигурация: spring.factories / AutoConfiguration.imports содержат классы конфигурации. @ConditionalOnClass, @ConditionalOnBean, @ConditionalOnProperty определяют, когда бин создаётся."},
+  {id:"spr-012",topic:"spring",lvl:1,type:"single",q:"Какой аннотацией помечают Spring Boot main класс?",options:["@Component","@Configuration","@SpringBootApplication","@EnableAutoConfiguration","@RestController"],correct:[2],explanation:"@SpringBootApplication = @Configuration + @EnableAutoConfiguration + @ComponentScan. Точка входа с public static void main и SpringApplication.run()."},
+  {id:"spr-013",topic:"spring",lvl:2,type:"single",q:"Что произойдёт при циклической зависимости бинов через конструктор?",options:["Spring разрешит автоматически","BeanCurrentlyInCreationException","Один бин будет null","Приложение запустится с предупреждением","StackOverflowError"],correct:[1],explanation:"Circular dependency через конструктор: Spring не может создать ни один бин (A нужен B, B нужен A). Решение: @Lazy на одном, setter injection, или рефакторинг."},
+  // === Kafka (continued) ===
+  {id:"kfk-004",topic:"kafka",lvl:1,type:"single",q:"Что такое offset в Kafka?",options:["Сдвиг времени","Уникальный номер сообщения в партиции","Размер буфера","Задержка доставки","Приоритет сообщения"],correct:[1],explanation:"Offset — уникальный последовательный номер сообщения в партиции. Consumer отслеживает свой offset (committed offset). Позволяет перечитывать сообщения."},
+  {id:"kfk-005",topic:"kafka",lvl:2,type:"single",q:"Что гарантирует exactly-once семантика в Kafka?",options:["Сообщение доставлено ровно один раз","Сообщение никогда не потеряется","Сообщение обработано ровно один раз (в рамках Kafka Streams / транзакций)","Порядок сообщений","Минимальная задержка"],correct:[2],explanation:"Exactly-once в Kafka: идемпотентный producer (enable.idempotence=true) + транзакции (transactional.id). В Kafka Streams: processing.guarantee=exactly_once_v2. За пределами Kafka — нужна идемпотентность consumer."},
+  {id:"kfk-006",topic:"kafka",lvl:2,type:"multi",q:"Какие компоненты входят в архитектуру Kafka?",options:["Producer","Broker","Zookeeper/KRaft","Consumer","Load Balancer"],correct:[0,1,2,3],explanation:"Kafka: Producer (отправляет), Broker (хранит), Consumer (читает), Zookeeper/KRaft (координация). Load Balancer не является частью Kafka — партиционирование встроено."},
+  // === Архитектура (continued) ===
+  {id:"arch-004",topic:"arch",lvl:2,type:"single",q:"Что такое CQRS?",options:["Паттерн кэширования","Command Query Responsibility Segregation — разделение модели чтения и записи","Протокол коммуникации сервисов","Система контроля версий","Паттерн маршрутизации"],correct:[1],explanation:"CQRS: отдельные модели для команд (write) и запросов (read). Позволяет оптимизировать каждую сторону независимо. Часто используется с Event Sourcing."},
+  {id:"arch-005",topic:"arch",lvl:1,type:"single",q:"Что такое API Gateway?",options:["База данных для API","Единая точка входа для клиентов, маршрутизирующая запросы к микросервисам","Система мониторинга","Брокер сообщений","Контейнер для API"],correct:[1],explanation:"API Gateway: единая точка входа. Функции: маршрутизация, аутентификация, rate limiting, load balancing, circuit breaking. Примеры: Spring Cloud Gateway, Kong, Envoy."},
+  {id:"arch-006",topic:"arch",lvl:2,type:"single",q:"Ситуация: сервис оплаты не отвечает. Что использовать?",options:["Увеличить таймаут до 60 секунд","Circuit Breaker — при N ошибках прекратить вызовы и вернуть fallback","Перезапустить сервер","Удалить кэш","Добавить retry без ограничений"],correct:[1],explanation:"Circuit Breaker (Resilience4j): CLOSED → OPEN (при threshold ошибок) → HALF_OPEN (пробные запросы). Fallback: заглушка, кэш, graceful degradation. Retry без ограничений — усугубит проблему."},
+  {id:"arch-007",topic:"arch",lvl:2,type:"multi",q:"Какие паттерны используются для обнаружения сервисов?",options:["Service Discovery","Circuit Breaker","Service Registry","Load Balancing (client-side)","Saga"],correct:[0,2,3],explanation:"Service Discovery: сервисы регистрируются в registry (Eureka, Consul). Client-side LB (Spring Cloud LoadBalancer) использует registry для выбора инстанса. Circuit Breaker и Saga — другие паттерны."},
+  // === Паттерны (continued) ===
+  {id:"pat-003",topic:"patterns",lvl:1,type:"single",q:"Какой паттерн позволяет создавать объекты без указания конкретного класса?",options:["Singleton","Observer","Factory Method","Adapter","Facade"],correct:[2],explanation:"Factory Method: определяет интерфейс создания объектов, но подклассы решают какой класс инстанциировать. Примеры: Calendar.getInstance(), Optional.of()."},
+  {id:"pat-004",topic:"patterns",lvl:2,type:"single",q:"Какой паттерн использует Spring для создания бинов?",options:["Observer","Prototype","Factory + Singleton","Adapter","Command"],correct:[2],explanation:"Spring IoC контейнер: Factory (BeanFactory/ApplicationContext создаёт бины) + Singleton (default scope). Также Proxy (AOP), Template Method (JdbcTemplate)."},
+  {id:"pat-005",topic:"patterns",lvl:2,type:"multi",q:"Какие паттерны относятся к поведенческим (behavioral)?",options:["Strategy","Builder","Observer","Singleton","Template Method"],correct:[0,2,4],explanation:"Behavioral: Strategy, Observer, Template Method, Command, Iterator, State, Chain of Responsibility. Builder, Singleton — порождающие. Adapter, Facade — структурные."},
+  {id:"pat-006",topic:"patterns",lvl:2,type:"single",q:"Что такое паттерн Decorator?",options:["Упрощение сложного интерфейса","Динамическое добавление обязанностей объекту через обёртку","Создание копии объекта","Преобразование интерфейса","Разделение абстракции и реализации"],correct:[1],explanation:"Decorator: обёртка с тем же интерфейсом, добавляет функциональность. Пример: BufferedInputStream(new FileInputStream()) — добавляет буферизацию. В Spring: BeanPostProcessor."},
+  // === Тестирование (continued) ===
+  {id:"tst-003",topic:"test",lvl:1,type:"single",q:"Что делает @MockBean в Spring Boot тестах?",options:["Создаёт реальный бин","Заменяет бин в Spring контексте на mock-объект Mockito","Удаляет бин из контекста","Создаёт тестовую БД","Запускает отдельный контекст"],correct:[1],explanation:"@MockBean: заменяет реальный бин в ApplicationContext на Mockito mock. Все зависимости этого бина получат mock. @SpyBean — частичный mock (реальные методы + переопределённые)."},
+  {id:"tst-004",topic:"test",lvl:2,type:"multi",q:"Какие подходы к тестированию интеграции с БД существуют?",options:["Testcontainers (реальная БД в Docker)","H2 in-memory","Мокирование Repository","@DataJpaTest","Ручное тестирование"],correct:[0,1,3],explanation:"Testcontainers — реальная СУБД в Docker (наиболее надёжно). H2 — in-memory (быстро, но различия с prod). @DataJpaTest — slice test для JPA. Мокирование — не интеграция."},
+  {id:"tst-005",topic:"test",lvl:2,type:"single",q:"Что тестирует unit-тест?",options:["Всё приложение целиком","Один модуль/класс/метод в изоляции от зависимостей","Взаимодействие сервисов","Производительность","UI"],correct:[1],explanation:"Unit test: изолированный тест одного модуля. Зависимости мокируются. Быстрый, детерминированный. Пирамида: много unit → меньше integration → мало e2e."},
+  // === DevOps (continued) ===
+  {id:"dev-003",topic:"devops",lvl:1,type:"single",q:"Что такое CI/CD?",options:["Continuous Integration / Continuous Deployment — автоматическая сборка, тесты и деплой","Certified Integration / Certified Deployment","Container Integration / Container Deployment","Cloud Infrastructure / Cloud Delivery","Code Inspection / Code Debugging"],correct:[0],explanation:"CI: автоматическая сборка + тесты при каждом коммите. CD: автоматический деплой (Continuous Delivery — до staging, Continuous Deployment — до prod). Инструменты: Jenkins, GitLab CI, GitHub Actions."},
+  {id:"dev-004",topic:"devops",lvl:2,type:"multi",q:"Какие инструменты используют для оркестрации контейнеров?",options:["Kubernetes","Docker Compose","Docker Swarm","Maven","Jenkins"],correct:[0,1,2],explanation:"Оркестрация: Kubernetes (prod-grade), Docker Compose (development/simple), Docker Swarm (simple clustering). Maven — сборка. Jenkins — CI/CD (не оркестрация)."},
+  {id:"dev-005",topic:"devops",lvl:2,type:"single",q:"Что такое Kubernetes Pod?",options:["Контейнер","Минимальная единица деплоя — один или несколько контейнеров с общими ресурсами","Кластер серверов","Сетевой namespace","Образ Docker"],correct:[1],explanation:"Pod: 1+ контейнеров с общим network namespace и volumes. Обычно 1 контейнер = 1 Pod. Sidecar pattern: основной + вспомогательные контейнеры в одном Pod."},
+  // === Безопасность (continued) ===
+  {id:"sec-003",topic:"security",lvl:1,type:"single",q:"Чем аутентификация отличается от авторизации?",options:["Ничем","Аутентификация — кто ты, авторизация — что тебе можно","Аутентификация — что можно, авторизация — кто ты","Аутентификация только для API","Авторизация только для UI"],correct:[1],explanation:"Authentication (authn): проверка личности (логин/пароль, JWT, OAuth). Authorization (authz): проверка прав доступа (роли, permissions). Порядок: сначала authn, потом authz."},
+  {id:"sec-004",topic:"security",lvl:2,type:"single",q:"Что такое SQL Injection и как защититься?",options:["Внедрение вредоносного SQL через пользовательский ввод — защита: параметризованные запросы","Ошибка в SQL синтаксисе","Оптимизация SQL запросов","Внедрение индексов","Конфликт транзакций"],correct:[0],explanation:"SQL Injection: \"DROP TABLE users; --\" в поле ввода. Защита: PreparedStatement (параметризованные запросы), ORM/JPA, валидация ввода, WAF. НИКОГДА не конкатенировать пользовательский ввод в SQL."},
+  {id:"sec-005",topic:"security",lvl:2,type:"multi",q:"Какие механизмы безопасности предоставляет Spring Security?",options:["Аутентификация","Авторизация (RBAC)","CSRF защита","SQL оптимизация","Method Security (@PreAuthorize)"],correct:[0,1,2,4],explanation:"Spring Security: аутентификация (форма, OAuth2, JWT), авторизация (роли, @PreAuthorize), CSRF, CORS, session management. SQL оптимизация — не его задача."},
+  // === Сеть (continued) ===
+  {id:"net-003",topic:"protocols",lvl:1,type:"single",q:"Чем TCP отличается от UDP?",options:["TCP быстрее","UDP надёжнее","TCP гарантирует доставку и порядок, UDP — нет (но быстрее)","Они идентичны","TCP только для веб-браузеров"],correct:[2],explanation:"TCP: надёжный, упорядоченный, с подтверждением (3-way handshake). UDP: быстрый, без гарантий (для streaming, gaming, DNS). HTTP работает поверх TCP."},
+  {id:"net-004",topic:"protocols",lvl:2,type:"single",q:"Что такое WebSocket?",options:["Новый формат JSON","Протокол полнодуплексной связи поверх одного TCP соединения","Замена HTTP","Тип базы данных","Формат логирования"],correct:[1],explanation:"WebSocket: persistent bidirectional connection. Handshake через HTTP Upgrade. Используется: чаты, real-time notifications, live data. В отличие от HTTP: сервер может push-ить данные клиенту."},
+  {id:"net-005",topic:"protocols",lvl:1,type:"multi",q:"Какие HTTP методы являются идемпотентными?",options:["GET","POST","PUT","DELETE","PATCH"],correct:[0,2,3],explanation:"Идемпотентные: GET, PUT, DELETE, HEAD, OPTIONS — повторный вызов даёт тот же результат. POST — НЕ идемпотентный (каждый вызов может создать новый ресурс). PATCH — не обязательно."},
+  // === Git ===
+  {id:"git-001",topic:"git",lvl:1,type:"single",q:"Чем git merge отличается от git rebase?",options:["Ничем","merge создаёт merge commit, rebase переписывает историю (перемещает коммиты)","rebase безопаснее","merge удаляет ветку","rebase создаёт pull request"],correct:[1],explanation:"merge: создаёт merge commit, сохраняет историю ветвления. rebase: переносит коммиты на верх целевой ветки, линейная история. Не rebase опубликованные ветки!"},
+  {id:"git-002",topic:"git",lvl:2,type:"single",q:"Что делает git cherry-pick?",options:["Удаляет коммит","Применяет конкретный коммит из другой ветки в текущую","Создаёт новую ветку","Откатывает изменения","Сжимает коммиты"],correct:[1],explanation:"cherry-pick: берёт один коммит (по hash) и применяет его в текущую ветку. Создаёт НОВЫЙ коммит с теми же изменениями. Полезно для hotfix."},
+  // === Kotlin ===
+  {id:"ktl-001",topic:"kotlin",lvl:1,type:"single",q:"Чем val отличается от var в Kotlin?",options:["Ничем","val — неизменяемая ссылка (read-only), var — изменяемая","val для чисел, var для строк","val — публичное, var — приватное","val — nullable, var — non-null"],correct:[1],explanation:"val = final в Java (ссылка неизменяема, но объект может быть мутабельным). var = обычная переменная. Best practice: использовать val по умолчанию."},
+  {id:"ktl-002",topic:"kotlin",lvl:2,type:"multi",q:"Какие особенности Kotlin отсутствуют в Java?",options:["Null safety (?/!!)","Data classes","Extension functions","Checked exceptions","Coroutines"],correct:[0,1,2,4],explanation:"Kotlin: null safety (type system), data classes (equals/hashCode/copy/toString), extension functions, coroutines. Java имеет checked exceptions — Kotlin нет."},
+  // === NoSQL ===
+  {id:"nos-001",topic:"nosql",lvl:1,type:"single",q:"Какой тип NoSQL использует Redis?",options:["Document store","Column-family","Graph","Key-Value store","Search engine"],correct:[3],explanation:"Redis: in-memory key-value store. Поддерживает: strings, lists, sets, sorted sets, hashes, streams. Используется: кэш, сессии, pub/sub, rate limiting."},
+  {id:"nos-002",topic:"nosql",lvl:2,type:"single",q:"Что такое CAP теорема?",options:["Паттерн проектирования","В распределённой системе можно обеспечить только 2 из 3: Consistency, Availability, Partition Tolerance","Алгоритм сжатия","Протокол безопасности","Стандарт API"],correct:[1],explanation:"CAP: при network partition нужно выбрать — Consistency (все видят одинаковые данные) или Availability (система отвечает). Partition Tolerance обязателен. CP: MongoDB, HBase. AP: Cassandra, DynamoDB."},
+  // === Additional Core Java ===
+  {id:"core-026",topic:"core",lvl:2,type:"single",q:"Какой результат?",code:"enum Color { RED, GREEN, BLUE }\nSystem.out.println(Color.RED == Color.RED);\nSystem.out.println(Color.RED.equals(Color.RED));",options:["true true","false true","true false","false false","Ошибка компиляции"],correct:[0],explanation:"Enum: == и equals() оба работают корректно, т.к. enum гарантирует singleton для каждого значения. Рекомендуется == (null-safe, быстрее)."},
+  {id:"core-027",topic:"core",lvl:3,type:"single",q:"Что такое Method Reference и когда использовать?",options:["Указатель на метод в C стиле","Сокращённая запись лямбды, ссылающейся на существующий метод (Class::method)","Вызов метода через reflection","Аннотация метода","Макрос препроцессора"],correct:[1],explanation:"Method Reference: String::toUpperCase вместо s -> s.toUpperCase(). Виды: static (Math::abs), instance (String::length), constructor (ArrayList::new), bound (str::charAt)."},
+  {id:"core-028",topic:"core",lvl:2,type:"multi",q:"Какие новые features появились в Java 17 (LTS)?",options:["Sealed classes","Records","Pattern matching for instanceof","Text blocks","Virtual threads"],correct:[0,1,2,3],explanation:"Java 17 LTS: sealed classes (preview в 15), records (14), pattern matching instanceof (16), text blocks (15). Virtual threads — Java 21."},
+  {id:"core-029",topic:"core",lvl:2,type:"single",q:"Что такое record в Java?",options:["Запись в БД","Immutable data carrier class — автогенерация equals, hashCode, toString, getters","Логирование событий","Тип enum","Коллекция данных"],correct:[1],explanation:"record Point(int x, int y) {} — компактный immutable класс. Автоматически: конструктор, getters (x(), y()), equals, hashCode, toString. Нельзя наследовать, extends Record неявно."},
+  {id:"core-030",topic:"core",lvl:1,type:"single",q:"Что такое Generic (дженерик) в Java?",options:["Общий класс для всех типов","Параметризованный тип, обеспечивающий type safety при компиляции","Класс без методов","Абстрактный класс","Интерфейс-маркер"],correct:[1],explanation:"Generics: List<String> — компилятор проверяет тип. Type erasure: в runtime информация о типе стирается (List<String> → List). Нельзя: new T(), new T[], instanceof T."},
+  // === Additional Collections ===
+  {id:"col-013",topic:"collections",lvl:2,type:"single",q:"Чем PriorityQueue отличается от обычной Queue?",options:["Ничем","Элементы извлекаются в порядке приоритета (natural ordering или Comparator)","PriorityQueue потокобезопасна","PriorityQueue имеет фиксированный размер","PriorityQueue работает как Stack"],correct:[1],explanation:"PriorityQueue: heap-based, poll() возвращает минимальный элемент (или по Comparator). O(log n) для add/poll. НЕ гарантирует порядок при итерации. Не thread-safe — для concurrent: PriorityBlockingQueue."},
+  {id:"col-014",topic:"collections",lvl:2,type:"single",q:"Что такое fail-fast итератор?",options:["Итератор, который быстро проходит коллекцию","Итератор, выбрасывающий ConcurrentModificationException при модификации коллекции во время обхода","Итератор без проверки типов","Итератор для пустых коллекций","Итератор с кэшированием"],correct:[1],explanation:"Fail-fast: ArrayList, HashMap — выбрасывают CME при структурной модификации. Fail-safe: CopyOnWriteArrayList, ConcurrentHashMap — работают на копии/сегменте, не выбрасывают CME."},
+  // === Additional Streams ===
+  {id:"str-009",topic:"streams",lvl:2,type:"single",q:"Что делает Collectors.groupingBy()?",options:["Сортирует элементы","Группирует элементы по ключу в Map<K, List<V>>","Объединяет стримы","Фильтрует элементы","Считает количество"],correct:[1],explanation:"groupingBy: аналог SQL GROUP BY. Результат: Map<K, List<V>>. Можно комбинировать: groupingBy(classifier, Collectors.counting()). Downstream collectors: counting, mapping, toSet."},
+  {id:"str-010",topic:"streams",lvl:2,type:"single",q:"Что вернёт код?",code:"Map<Boolean, List<Integer>> result =\n  List.of(1,2,3,4,5).stream()\n    .collect(Collectors.partitioningBy(n -> n > 3));",options:["Map с одним элементом","Map с двумя ключами: true=[4,5], false=[1,2,3]","List<Integer>","Exception","Map<Integer, Boolean>"],correct:[1],explanation:"partitioningBy: разделяет на две группы (true/false). Результат: {true=[4,5], false=[1,2,3]}. Всегда ровно 2 ключа, даже если одна группа пуста."},
+  // === Additional SQL ===
+  {id:"sql-010",topic:"sql",lvl:2,type:"single",q:"Что такое deadlock в контексте БД?",options:["Ошибка синтаксиса SQL","Две транзакции взаимно блокируют строки друг друга и ни одна не может продолжить","Переполнение таблицы","Ошибка соединения","Отсутствие индекса"],correct:[1],explanation:"DB deadlock: транзакция A блокирует строку 1 и ждёт строку 2, транзакция B блокирует строку 2 и ждёт строку 1. СУБД обнаруживает и откатывает одну транзакцию."},
+  {id:"sql-011",topic:"sql",lvl:2,type:"single",q:"Что делает EXPLAIN в SQL?",options:["Выполняет запрос быстрее","Показывает план выполнения запроса (какие индексы, JOIN алгоритмы)","Объясняет синтаксис SQL","Документирует таблицу","Оптимизирует запрос автоматически"],correct:[1],explanation:"EXPLAIN: показывает plan (Seq Scan, Index Scan, Nested Loop, Hash Join и т.д.), estimated cost, rows. EXPLAIN ANALYZE — реально выполняет и показывает actual time."},
+  // === Additional JPA ===
+  {id:"jpa-008",topic:"jpa",lvl:2,type:"single",q:"Что такое optimistic locking в JPA?",options:["Блокировка строки в БД","Проверка версии (@Version) при обновлении — без физической блокировки","Блокировка всей таблицы","Отключение параллельного доступа","Кэширование версий"],correct:[1],explanation:"Optimistic locking: @Version (int/timestamp). При UPDATE проверяется версия. Если изменилась — OptimisticLockException. Pessimistic: SELECT FOR UPDATE — реальная блокировка строки."},
+  // === Additional Spring ===
+  {id:"spr-014",topic:"spring",lvl:2,type:"single",q:"Что такое Spring WebFlux?",options:["Новая версия Spring MVC","Реактивный веб-фреймворк на основе Project Reactor (non-blocking I/O)","Система миграций","Модуль безопасности","Библиотека тестирования"],correct:[1],explanation:"WebFlux: реактивный стек — Mono<T> (0..1) и Flux<T> (0..N). Non-blocking I/O, event loop (Netty). Для высоконагруженных сервисов с большим I/O. Альтернатива Spring MVC (servlet-based)."},
+  {id:"spr-015",topic:"spring",lvl:2,type:"single",q:"Какие profiles поддерживает Spring Boot?",options:["Только dev и prod","Любые именованные профили, активируемые через spring.profiles.active","Только 3 встроенных","Профили определяются ОС","Профили только для логирования"],correct:[1],explanation:"Profiles: любые имена (dev, test, staging, prod). Активация: spring.profiles.active=dev. application-dev.yml. @Profile(\"dev\") на бинах. Можно комбинировать несколько."},
+  // === Additional Kafka ===
+  {id:"kfk-007",topic:"kafka",lvl:2,type:"single",q:"Что такое consumer group в Kafka?",options:["Группировка сообщений","Набор консьюмеров, совместно читающих топик — каждая партиция назначена одному консьюмеру в группе","Группа топиков","Кластер брокеров","Набор продюсеров"],correct:[1],explanation:"Consumer Group: параллельное чтение топика. Каждая партиция — одному consumer в группе. Разные группы читают независимо (каждая получает все сообщения). Rebalance при добавлении/удалении consumer."},
+  // === Additional Architecture ===
+  {id:"arch-008",topic:"arch",lvl:2,type:"single",q:"Что такое Event Sourcing?",options:["Логирование ошибок","Хранение состояния как последовательности событий (вместо текущего состояния)","Обработка событий UI","Паттерн Observer","Система очередей"],correct:[1],explanation:"Event Sourcing: состояние = replay всех событий. OrderCreated → ItemAdded → OrderPaid. Преимущества: аудит, time travel, rebuild state. Часто с CQRS. Сложность: eventual consistency, event versioning."},
+  {id:"arch-009",topic:"arch",lvl:1,type:"single",q:"Что такое DDD (Domain-Driven Design)?",options:["Подход к дизайну UI","Подход к проектированию ПО, в центре которого — бизнес-домен и его модель","Паттерн баз данных","Фреймворк тестирования","Методология управления проектами"],correct:[1],explanation:"DDD: Ubiquitous Language, Bounded Context, Aggregate, Entity, Value Object, Domain Event, Repository. Стратегический (контексты) и тактический (паттерны) уровни. Eric Evans."},
+  // === Additional patterns ===
+  {id:"pat-007",topic:"patterns",lvl:2,type:"single",q:"Что такое паттерн Strategy?",options:["Планирование проекта","Определение семейства алгоритмов, инкапсуляция каждого и взаимозаменяемость","Создание объектов","Управление состоянием","Логирование"],correct:[1],explanation:"Strategy: интерфейс алгоритма + конкретные реализации. Клиент выбирает стратегию в runtime. Пример: Comparator, PaymentStrategy (card, SBP, crypto). Убирает switch/if-else."},
+  // === Situation questions ===
+  {id:"sit-001",topic:"spring",lvl:2,type:"single",q:"Ситуация: приложение медленно стартует. Что проверить первым?",options:["Добавить больше RAM","Проанализировать время создания бинов (spring.main.lazy-initialization, actuator startup endpoint)","Переписать на Go","Удалить все тесты","Обновить Java до последней версии"],correct:[1],explanation:"Диагностика: /actuator/startup, spring.main.lazy-initialization=true, ApplicationStartup (BufferingApplicationStartup). Частые причины: тяжёлые бины, ComponentScan слишком широкий, Hibernate DDL auto."},
+  {id:"sit-002",topic:"threads",lvl:2,type:"single",q:"Ситуация: приложение зависло, CPU 100%. Что делать?",options:["Перезагрузить сервер","Снять thread dump (jstack/jcmd) и проанализировать","Добавить больше CPU","Удалить логи","Увеличить heap"],correct:[1],explanation:"Thread dump: jstack <pid> или jcmd <pid> Thread.print. Ищем: BLOCKED потоки (deadlock), бесконечные циклы (RUNNABLE), чрезмерное количество потоков. Также: top -H для CPU по thread, async-profiler для flame graph."},
+  {id:"sit-003",topic:"sql",lvl:2,type:"single",q:"Ситуация: SQL запрос выполняется 30 секунд. Что первым делом?",options:["Добавить больше RAM серверу","Выполнить EXPLAIN ANALYZE и проверить plan + наличие индексов","Переписать на NoSQL","Удалить таблицу и создать заново","Увеличить connection pool"],correct:[1],explanation:"EXPLAIN ANALYZE: показывает Seq Scan (нет индекса?), Nested Loop на больших таблицах, estimated vs actual rows. Проверить: индексы, статистику (ANALYZE), N+1 на уровне ORM."},
+  {id:"sit-004",topic:"arch",lvl:2,type:"single",q:"Ситуация: нужно обрабатывать 10000 запросов/сек. Какой подход?",options:["Один мощный сервер","Горизонтальное масштабирование + кэширование + async обработка","Увеличить таймауты","Отключить логирование","Использовать только stored procedures"],correct:[1],explanation:"High load: горизонтальное масштабирование (k8s), кэш (Redis), async (Kafka), connection pooling, read replicas, CDN, оптимизация запросов. Вертикальное масштабирование имеет потолок."}
+];
+
+// ============================================================
 // STATE
 // ============================================================
 const STORAGE_KEY = 'java-prep-2026';
@@ -1098,6 +1461,8 @@ function renderSidebar() {
   let html = `<div class="logo"><h1>Java <span>Prep</span></h1><p>Interview 2026</p></div>`;
   html += `<button class="nav-item ${currentTopic==='dashboard'?'active':''}" onclick="navigate('dashboard')">
     <span class="nav-icon">&#128200;</span>Dashboard</button>`;
+  html += `<button class="nav-item" onclick="openTestSetup()">
+    <span class="nav-icon">&#128221;</span>Тест</button>`;
   TOPICS.forEach(t => {
     const s = getTopicStats(t);
     const pct = s.total ? Math.round((s.known/s.total)*100) : 0;
@@ -1202,6 +1567,34 @@ function renderDashboard(main) {
     <button class="topbar-btn" onclick="startQuiz()" style="flex:1">&#127922; Quiz по всем</button>
     <button class="topbar-btn" onclick="startQuiz('hard')" style="flex:1">&#128293; Повторить сложные</button>
     <button class="topbar-btn" onclick="startQuiz('new')" style="flex:1">&#10024; Изучить новые</button>
+  </div>`;
+
+  // Test stats section
+  var testData = JSON.parse(localStorage.getItem("java-prep-tests") || '{"history":[],"bestStreak":0,"totalTests":0,"totalCorrect":0,"totalAnswered":0}');
+  if (testData.totalTests > 0) {
+    var avgPct = testData.totalAnswered > 0 ? Math.round(testData.totalCorrect / testData.totalAnswered * 100) : 0;
+    html += `<h3 style="margin-bottom:12px">&#128221; Тесты</h3>`;
+    html += `<div class="stats" style="margin-bottom:16px">
+      <div class="stat-card"><div class="stat-num accent">${testData.totalTests}</div><div class="stat-label">Тестов пройдено</div></div>
+      <div class="stat-card"><div class="stat-num green">${avgPct}%</div><div class="stat-label">Средний результат</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--orange)">${testData.bestStreak}</div><div class="stat-label">Лучший streak</div></div>
+    </div>`;
+    // Last 10 tests mini chart
+    var last10 = testData.history.slice(-10);
+    if (last10.length > 1) {
+      html += `<div style="background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px">`;
+      html += `<div style="font-size:13px;color:var(--text2);margin-bottom:8px">Прогресс (последние ${last10.length} тестов)</div>`;
+      html += `<div style="display:flex;align-items:flex-end;gap:4px;height:60px">`;
+      last10.forEach(function(h) {
+        var p = h.total > 0 ? Math.round(h.correct / h.total * 100) : 0;
+        var color = p >= 70 ? 'var(--green)' : p >= 50 ? 'var(--yellow)' : 'var(--red)';
+        html += '<div style="flex:1;background:'+color+';border-radius:3px 3px 0 0;min-height:4px;height:'+Math.max(p,5)+'%" title="'+p+'%"></div>';
+      });
+      html += `</div></div>`;
+    }
+  }
+  html += `<div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap">
+    <button class="topbar-btn" onclick="openTestSetup()" style="flex:1">&#128221; Пройти тест</button>
   </div>`;
 
   html += `<h3 style="margin-bottom:12px">По темам</h3>`;
@@ -1326,6 +1719,513 @@ function closeQuiz() {
 }
 
 // ============================================================
+// TEST MODE (multiple choice)
+// ============================================================
+let testState = null; // {questions, answers, current, streak, bestStreak, startTime, timerSec, timerInterval, infinite, selectedTopics, selectedLevel}
+
+function openTestSetup() {
+  const overlay = document.getElementById("testOverlay");
+  overlay.classList.add("active");
+  document.getElementById("testNav").style.display = "none";
+  document.getElementById("testTitle").innerHTML = "&#128221; Настройка теста";
+  document.getElementById("testStreak").textContent = "";
+  document.getElementById("testTimer").textContent = "";
+  document.getElementById("testProgressText").textContent = "";
+  document.getElementById("testProgressBar").style.width = "0%";
+  document.getElementById("testDots").innerHTML = "";
+
+  var topicSet = new Set(QUIZ_BANK.map(function(q){return q.topic;}));
+  var topicIds = [];
+  TOPICS.forEach(function(t){ if(topicSet.has(t.id)) topicIds.push(t); });
+
+  var html = '<div class="test-setup">';
+  html += '<h2>Настройка теста</h2>';
+  html += '<div class="test-setup-section"><label>Темы</label><div class="test-chips" id="testTopicChips">';
+  html += '<button class="test-chip active" data-topic="all" onclick="toggleTestChip(this,true)">Все</button>';
+  topicIds.forEach(function(t){
+    html += '<button class="test-chip" data-topic="'+t.id+'" onclick="toggleTestChip(this,false)">'+t.icon+" "+t.name+"</button>";
+  });
+  html += '</div></div>';
+  html += '<div class="test-setup-section"><label>Уровень</label><div class="test-chips" id="testLevelChips">';
+  html += '<button class="test-chip active" data-level="0" onclick="toggleTestLevel(this)">Все</button>';
+  html += '<button class="test-chip" data-level="1" onclick="toggleTestLevel(this)">L1</button>';
+  html += '<button class="test-chip" data-level="2" onclick="toggleTestLevel(this)">L2</button>';
+  html += '<button class="test-chip" data-level="3" onclick="toggleTestLevel(this)">L3</button>';
+  html += '</div></div>';
+  html += '<div class="test-setup-section"><label>Количество вопросов</label><div class="test-chips" id="testCountChips">';
+  html += '<button class="test-chip active" data-count="10" onclick="toggleTestCount(this)">10</button>';
+  html += '<button class="test-chip" data-count="20" onclick="toggleTestCount(this)">20</button>';
+  html += '<button class="test-chip" data-count="30" onclick="toggleTestCount(this)">30</button>';
+  html += '<button class="test-chip" data-count="0" onclick="toggleTestCount(this)">&infin;</button>';
+  html += '</div></div>';
+  html += '<div class="test-setup-section"><label>Таймер на вопрос</label><div class="test-chips" id="testTimerChips">';
+  html += '<button class="test-chip active" data-timer="0" onclick="toggleTestTimerChip(this)">Без</button>';
+  html += '<button class="test-chip" data-timer="30" onclick="toggleTestTimerChip(this)">30с</button>';
+  html += '<button class="test-chip" data-timer="60" onclick="toggleTestTimerChip(this)">60с</button>';
+  html += '</div></div>';
+  html += '<button class="test-start-btn" onclick="startTest()">&#9654; Начать тест</button>';
+  html += '</div>';
+
+  document.getElementById("testContent").innerHTML = html;
+  document.getElementById("testContent").className = "";
+}
+
+function toggleTestChip(btn, isAll) {
+  var chips = document.querySelectorAll("#testTopicChips .test-chip");
+  if (isAll) {
+    chips.forEach(function(c){ c.classList.remove("active"); });
+    btn.classList.add("active");
+  } else {
+    var allChip = document.querySelector('#testTopicChips [data-topic="all"]');
+    allChip.classList.remove("active");
+    btn.classList.toggle("active");
+    var anyActive = document.querySelector('#testTopicChips .test-chip.active:not([data-topic="all"])');
+    if (!anyActive) allChip.classList.add("active");
+  }
+}
+function toggleTestLevel(btn) {
+  document.querySelectorAll("#testLevelChips .test-chip").forEach(function(c){ c.classList.remove("active"); });
+  btn.classList.add("active");
+}
+function toggleTestCount(btn) {
+  document.querySelectorAll("#testCountChips .test-chip").forEach(function(c){ c.classList.remove("active"); });
+  btn.classList.add("active");
+}
+function toggleTestTimerChip(btn) {
+  document.querySelectorAll("#testTimerChips .test-chip").forEach(function(c){ c.classList.remove("active"); });
+  btn.classList.add("active");
+}
+
+function startTest() {
+  var selectedTopics = [];
+  var allChip = document.querySelector('#testTopicChips [data-topic="all"]');
+  if (allChip && allChip.classList.contains("active")) {
+    selectedTopics = null; // all
+  } else {
+    document.querySelectorAll("#testTopicChips .test-chip.active").forEach(function(c){
+      selectedTopics.push(c.getAttribute("data-topic"));
+    });
+  }
+  var levelEl = document.querySelector("#testLevelChips .test-chip.active");
+  var level = levelEl ? parseInt(levelEl.getAttribute("data-level")) : 0;
+  var countEl = document.querySelector("#testCountChips .test-chip.active");
+  var count = countEl ? parseInt(countEl.getAttribute("data-count")) : 10;
+  var timerEl = document.querySelector("#testTimerChips .test-chip.active");
+  var timerSec = timerEl ? parseInt(timerEl.getAttribute("data-timer")) : 0;
+
+  var pool = QUIZ_BANK.filter(function(q) {
+    if (selectedTopics && selectedTopics.indexOf(q.topic) === -1) return false;
+    if (level > 0 && q.lvl !== level) return false;
+    return true;
+  });
+
+  // Shuffle
+  for (var i = pool.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+  }
+
+  if (pool.length === 0) { alert("Нет вопросов для выбранных параметров"); return; }
+
+  var infinite = count === 0;
+  var questions = infinite ? pool : pool.slice(0, count);
+
+  testState = {
+    questions: questions,
+    answers: new Array(questions.length).fill(null), // each: array of selected indices, or null
+    current: 0,
+    streak: 0,
+    bestStreak: 0,
+    startTime: Date.now(),
+    timerSec: timerSec,
+    timerInterval: null,
+    timerRemaining: timerSec,
+    infinite: infinite,
+    selectedTopics: selectedTopics,
+    selectedLevel: level,
+    finished: false
+  };
+
+  document.getElementById("testNav").style.display = "flex";
+  document.getElementById("testTitle").innerHTML = "&#128221; Тест";
+  renderTestQuestion();
+  setupTestSwipe();
+}
+
+function renderTestQuestion() {
+  if (!testState || testState.current >= testState.questions.length) {
+    if (testState && testState.infinite) { finishTest(); }
+    return;
+  }
+
+  var q = testState.questions[testState.current];
+  var topicObj = TOPICS.find(function(t){return t.id===q.topic;});
+  var topicName = topicObj ? topicObj.name : q.topic;
+
+  // Header
+  document.getElementById("testProgressText").textContent = (testState.current+1) + " / " + testState.questions.length;
+  document.getElementById("testProgressBar").style.width = ((testState.current+1)/testState.questions.length*100) + "%";
+  document.getElementById("testStreak").textContent = testState.streak > 0 ? ("\uD83D\uDD25 " + testState.streak) : "";
+
+  // Dots
+  var dotsHtml = "";
+  var maxDots = Math.min(testState.questions.length, 50);
+  for (var i = 0; i < maxDots; i++) {
+    var cls = "test-dot";
+    if (testState.answers[i] !== null) cls += " answered";
+    if (i === testState.current) cls += " current";
+    dotsHtml += '<span class="'+cls+'"></span>';
+  }
+  if (testState.questions.length > 50) dotsHtml += '<span style="color:var(--text2);font-size:11px">...+'+(testState.questions.length-50)+'</span>';
+  document.getElementById("testDots").innerHTML = dotsHtml;
+
+  // Body
+  var html = '<div class="test-body">';
+  html += '<div class="test-q-badges"><span class="badge badge-l'+q.lvl+'">L'+q.lvl+'</span><span class="badge" style="background:rgba(108,92,231,0.15);color:var(--accent2)">'+topicName+'</span>';
+  if (q.type === "multi") html += '<span class="badge" style="background:rgba(253,203,110,0.15);color:var(--yellow)">Несколько ответов</span>';
+  html += '</div>';
+  html += '<div class="test-q-text">'+q.q+'</div>';
+  if (q.code) {
+    html += '<div class="test-q-code">'+escHtml(q.code)+'</div>';
+  }
+  if (q.type === "multi") html += '<div class="test-q-hint">Выберите несколько вариантов</div>';
+  html += '<div class="test-options">';
+  var currentAnswer = testState.answers[testState.current];
+  q.options.forEach(function(opt, idx) {
+    var selected = currentAnswer && currentAnswer.indexOf(idx) !== -1;
+    var cls = "test-option" + (q.type === "multi" ? " multi" : "") + (selected ? " selected" : "");
+    html += '<div class="'+cls+'" onclick="selectTestOption('+idx+')">';
+    html += '<span class="indicator"></span>';
+    html += '<span>'+escHtml(opt)+'</span>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  document.getElementById("testContent").innerHTML = html;
+  document.getElementById("testContent").className = "";
+
+  // Timer
+  if (testState.timerInterval) clearInterval(testState.timerInterval);
+  if (testState.timerSec > 0) {
+    testState.timerRemaining = testState.timerSec;
+    updateTimerDisplay();
+    testState.timerInterval = setInterval(function() {
+      testState.timerRemaining--;
+      updateTimerDisplay();
+      if (testState.timerRemaining <= 0) {
+        clearInterval(testState.timerInterval);
+        testState.timerInterval = null;
+        testNext();
+      }
+    }, 1000);
+  } else {
+    document.getElementById("testTimer").textContent = "";
+  }
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function updateTimerDisplay() {
+  var el = document.getElementById("testTimer");
+  var r = testState.timerRemaining;
+  el.textContent = "\u23F1 " + r + "\u0441";
+  el.className = "test-timer" + (r <= 5 ? " warning" : "");
+}
+
+function selectTestOption(idx) {
+  if (!testState || testState.finished) return;
+  var q = testState.questions[testState.current];
+  var ans = testState.answers[testState.current] || [];
+  ans = ans.slice(); // copy
+
+  if (q.type === "single") {
+    ans = [idx];
+  } else {
+    var pos = ans.indexOf(idx);
+    if (pos !== -1) ans.splice(pos, 1);
+    else ans.push(idx);
+  }
+  testState.answers[testState.current] = ans;
+  renderTestQuestion();
+}
+
+function testPrev() {
+  if (!testState || testState.current <= 0) return;
+  testState.current--;
+  renderTestQuestion();
+}
+
+function testNext() {
+  if (!testState) return;
+  // Check answer for streak
+  var q = testState.questions[testState.current];
+  var ans = testState.answers[testState.current];
+  if (ans && ans.length > 0) {
+    var correct = isAnswerCorrect(testState.current);
+    if (correct) {
+      testState.streak++;
+      if (testState.streak > testState.bestStreak) testState.bestStreak = testState.streak;
+    } else {
+      testState.streak = 0;
+    }
+  }
+
+  testState.current++;
+  if (testState.current >= testState.questions.length) {
+    if (testState.infinite) {
+      // Add more questions from pool if possible
+      finishTest();
+    } else {
+      finishTest();
+    }
+    return;
+  }
+  renderTestQuestion();
+}
+
+function isAnswerCorrect(idx) {
+  var q = testState.questions[idx];
+  var ans = testState.answers[idx];
+  if (!ans || ans.length === 0) return false;
+  if (ans.length !== q.correct.length) return false;
+  var sorted1 = ans.slice().sort();
+  var sorted2 = q.correct.slice().sort();
+  for (var i = 0; i < sorted1.length; i++) {
+    if (sorted1[i] !== sorted2[i]) return false;
+  }
+  return true;
+}
+
+function finishTest() {
+  if (!testState) return;
+  if (testState.timerInterval) { clearInterval(testState.timerInterval); testState.timerInterval = null; }
+  testState.finished = true;
+
+  // Process last question streak if not yet
+  var totalCorrect = 0;
+  var totalAnswered = 0;
+  var topicStats = {};
+  testState.questions.forEach(function(q, i) {
+    var ans = testState.answers[i];
+    if (ans && ans.length > 0) {
+      totalAnswered++;
+      var correct = isAnswerCorrect(i);
+      if (correct) totalCorrect++;
+      if (!topicStats[q.topic]) topicStats[q.topic] = {total:0, correct:0};
+      topicStats[q.topic].total++;
+      if (correct) topicStats[q.topic].correct++;
+    } else {
+      if (!topicStats[q.topic]) topicStats[q.topic] = {total:0, correct:0};
+      topicStats[q.topic].total++;
+    }
+  });
+
+  var elapsed = Math.round((Date.now() - testState.startTime) / 1000);
+  var pct = totalAnswered > 0 ? Math.round(totalCorrect / totalAnswered * 100) : 0;
+
+  // Recalculate best streak
+  var streak = 0, bestStreak = 0;
+  testState.questions.forEach(function(q, i) {
+    if (isAnswerCorrect(i)) { streak++; if (streak > bestStreak) bestStreak = streak; }
+    else streak = 0;
+  });
+  testState.bestStreak = bestStreak;
+
+  // Stars
+  var stars = pct >= 90 ? 5 : pct >= 75 ? 4 : pct >= 60 ? 3 : pct >= 40 ? 2 : 1;
+  var starStr = "";
+  for (var i = 0; i < 5; i++) starStr += i < stars ? "\u2605" : "\u2606";
+  var verdicts = ["","Попробуйте ещё раз","Неплохо!","Хорошо!","Отлично!","Превосходно!"];
+
+  // Save to history
+  saveTestHistory(totalCorrect, totalAnswered, elapsed, bestStreak);
+
+  // Render results
+  document.getElementById("testNav").style.display = "none";
+  document.getElementById("testTitle").innerHTML = "&#128202; Результат";
+  document.getElementById("testStreak").textContent = "";
+  document.getElementById("testTimer").textContent = "";
+  document.getElementById("testDots").innerHTML = "";
+
+  var html = '<div class="test-results">';
+  html += '<div class="test-results-score">';
+  html += '<div class="big-num" style="color:' + (pct >= 60 ? 'var(--green)' : pct >= 40 ? 'var(--yellow)' : 'var(--red)') + '">' + totalCorrect + ' / ' + totalAnswered + '</div>';
+  html += '<div class="big-pct">' + pct + '%</div>';
+  html += '<div class="stars">' + starStr + '</div>';
+  html += '<div class="verdict">' + verdicts[stars] + '</div>';
+  html += '</div>';
+
+  html += '<div class="test-results-meta">';
+  html += '<span>\uD83D\uDD25 Streak: ' + bestStreak + '</span>';
+  html += '<span>\u23F1 ' + formatTime(elapsed) + '</span>';
+  html += '</div>';
+
+  // Topic breakdown
+  html += '<div class="test-results-topics"><h3 style="margin-bottom:12px">По темам</h3>';
+  Object.keys(topicStats).forEach(function(tid) {
+    var ts = topicStats[tid];
+    var topicObj = TOPICS.find(function(t){return t.id===tid;});
+    var name = topicObj ? topicObj.name : tid;
+    var tpct = ts.total > 0 ? Math.round(ts.correct/ts.total*100) : 0;
+    html += '<div class="test-results-topic"><span style="min-width:120px">' + name + '</span>';
+    html += '<div class="topic-bar"><div class="topic-bar-fill" style="width:'+tpct+'%"></div></div>';
+    html += '<span style="min-width:70px;text-align:right">'+ts.correct+'/'+ts.total+' '+tpct+'%</span></div>';
+  });
+  html += '</div>';
+
+  // Error list
+  var errors = [];
+  testState.questions.forEach(function(q, i) {
+    if (!isAnswerCorrect(i)) errors.push({q:q, idx:i});
+  });
+  if (errors.length > 0) {
+    html += '<div class="test-errors-list"><h3 style="margin-bottom:12px">\u274C Ошибки ('+errors.length+')</h3>';
+    errors.forEach(function(e) {
+      html += '<div class="test-error-item" onclick="showTestReview('+e.idx+')">';
+      html += '\u274C Q'+(e.idx+1)+': '+e.q.q.substring(0,60)+(e.q.q.length>60?"...":"");
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="test-results-actions">';
+  if (errors.length > 0) html += '<button onclick="showTestReview('+errors[0].idx+')">\uD83D\uDCD6 Разбор ошибок</button>';
+  html += '<button onclick="retryTest()">\uD83D\uDD04 Пройти ещё раз</button>';
+  html += '<button class="btn-primary" onclick="closeTest()">\uD83C\uDFE0 На главную</button>';
+  html += '</div></div>';
+
+  document.getElementById("testContent").innerHTML = html;
+  document.getElementById("testProgressBar").style.width = "100%";
+  document.getElementById("testProgressText").textContent = "";
+}
+
+function formatTime(sec) {
+  var m = Math.floor(sec / 60);
+  var s = sec % 60;
+  return m + ":" + (s < 10 ? "0" : "") + s;
+}
+
+function saveTestHistory(correct, total, timeSec, streak) {
+  var data = JSON.parse(localStorage.getItem("java-prep-tests") || '{"history":[],"bestStreak":0,"totalTests":0,"totalCorrect":0,"totalAnswered":0}');
+  var errorIds = [];
+  testState.questions.forEach(function(q, i) {
+    if (!isAnswerCorrect(i)) errorIds.push(q.id);
+  });
+  data.history.push({
+    date: new Date().toISOString(),
+    topics: testState.selectedTopics || ["all"],
+    level: testState.selectedLevel || 0,
+    total: total,
+    correct: correct,
+    time: timeSec,
+    streak: streak,
+    errors: errorIds
+  });
+  data.totalTests++;
+  data.totalCorrect += correct;
+  data.totalAnswered += total;
+  if (streak > data.bestStreak) data.bestStreak = streak;
+  localStorage.setItem("java-prep-tests", JSON.stringify(data));
+}
+
+function showTestReview(idx) {
+  if (!testState) return;
+  var q = testState.questions[idx];
+  var ans = testState.answers[idx] || [];
+  var topicObj = TOPICS.find(function(t){return t.id===q.topic;});
+  var topicName = topicObj ? topicObj.name : q.topic;
+  var correct = isAnswerCorrect(idx);
+
+  document.getElementById("testNav").style.display = "flex";
+  document.getElementById("testTitle").innerHTML = (correct ? "\u2705" : "\u274C") + " Вопрос " + (idx+1);
+
+  // Find prev/next errors
+  var errors = [];
+  testState.questions.forEach(function(qq, i) { if (!isAnswerCorrect(i)) errors.push(i); });
+  var errPos = errors.indexOf(idx);
+  var prevErr = errPos > 0 ? errors[errPos - 1] : -1;
+  var nextErr = errPos < errors.length - 1 ? errors[errPos + 1] : -1;
+
+  var html = '<div class="test-review">';
+  html += '<div class="test-q-badges"><span class="badge badge-l'+q.lvl+'">L'+q.lvl+'</span><span class="badge" style="background:rgba(108,92,231,0.15);color:var(--accent2)">'+topicName+'</span></div>';
+  html += '<div class="test-q-text" style="text-align:left;font-size:16px">'+q.q+'</div>';
+  if (q.code) html += '<div class="test-q-code">'+escHtml(q.code)+'</div>';
+
+  html += '<div class="test-options" style="pointer-events:none">';
+  q.options.forEach(function(opt, oi) {
+    var wasSelected = ans.indexOf(oi) !== -1;
+    var isCorrect = q.correct.indexOf(oi) !== -1;
+    var cls = "test-option" + (q.type === "multi" ? " multi" : "");
+    if (wasSelected && isCorrect) cls += " selected opt-correct";
+    else if (wasSelected && !isCorrect) cls += " selected opt-wrong";
+    else if (!wasSelected && isCorrect) cls += " opt-missed";
+    html += '<div class="'+cls+'"><span class="indicator"></span><span>'+escHtml(opt);
+    if (wasSelected && isCorrect) html += ' \u2705';
+    else if (wasSelected && !isCorrect) html += ' \u274C';
+    else if (!wasSelected && isCorrect) html += ' \u2705 (правильный)';
+    html += '</span></div>';
+  });
+  html += '</div>';
+
+  if (q.explanation) {
+    html += '<div class="test-review-explanation"><b>Объяснение:</b><br>' + q.explanation + '</div>';
+  }
+
+  html += '<div style="display:flex;gap:10px;margin-top:20px">';
+  if (prevErr >= 0) html += '<button class="topbar-btn" style="flex:1" onclick="showTestReview('+prevErr+')">\u2190 Предыдущая ошибка</button>';
+  html += '<button class="topbar-btn" style="flex:1" onclick="finishTest()">\u2190 К результатам</button>';
+  if (nextErr >= 0) html += '<button class="topbar-btn" style="flex:1" onclick="showTestReview('+nextErr+')">Следующая ошибка \u2192</button>';
+  html += '</div></div>';
+
+  document.getElementById("testContent").innerHTML = html;
+
+  // Override nav buttons for review
+  document.getElementById("testNav").style.display = "none";
+}
+
+function retryTest() {
+  if (!testState) return;
+  // Re-shuffle
+  var qs = testState.questions;
+  for (var i = qs.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = qs[i]; qs[i] = qs[j]; qs[j] = tmp;
+  }
+  testState.answers = new Array(qs.length).fill(null);
+  testState.current = 0;
+  testState.streak = 0;
+  testState.bestStreak = 0;
+  testState.startTime = Date.now();
+  testState.finished = false;
+  document.getElementById("testNav").style.display = "flex";
+  document.getElementById("testTitle").innerHTML = "&#128221; Тест";
+  renderTestQuestion();
+}
+
+function closeTest() {
+  if (testState && testState.timerInterval) { clearInterval(testState.timerInterval); }
+  testState = null;
+  document.getElementById("testOverlay").classList.remove("active");
+  renderSidebar();
+  renderMain();
+}
+
+// Swipe support for test mode
+function setupTestSwipe() {
+  var el = document.getElementById("testContent");
+  var startX = 0, startY = 0;
+  el.ontouchstart = function(e) { startX = e.changedTouches[0].screenX; startY = e.changedTouches[0].screenY; };
+  el.ontouchend = function(e) {
+    var dx = e.changedTouches[0].screenX - startX;
+    var dy = e.changedTouches[0].screenY - startY;
+    if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx)) return;
+    if (dx < 0) testNext(); else testPrev();
+  };
+}
+
+// ============================================================
 // THEME & MOBILE
 // ============================================================
 function toggleTheme() {
@@ -1397,6 +2297,13 @@ function importProgress() {
 
 // Keyboard
 document.addEventListener('keydown', e => {
+  // Test mode keys
+  if (document.getElementById('testOverlay').classList.contains('active')) {
+    if (e.key === 'Escape') closeTest();
+    if (e.key === 'ArrowLeft') testPrev();
+    if (e.key === 'ArrowRight') testNext();
+    return;
+  }
   if (e.key === 'Escape') closeQuiz();
   if (e.key === ' ' && document.getElementById('quiz').classList.contains('active')) {
     e.preventDefault();
