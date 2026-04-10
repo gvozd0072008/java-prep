@@ -136,6 +136,7 @@ input { font:inherit; color:inherit; }
 }
 .topbar-btn:hover { background:var(--bg3); }
 .topbar-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.topbar-filters { display:flex; gap:8px; flex-wrap:wrap; }
 
 /* Stats */
 .stats {
@@ -355,12 +356,97 @@ input { font:inherit; color:inherit; }
   }
   .sidebar.open { transform:translateX(0); }
   .sidebar-overlay.open { display:block; }
-  .main { margin-left:0; padding:70px 12px 12px; }
-  .mobile-header { display:flex; }
-  .stats { grid-template-columns:repeat(2,1fr); }
-  .topbar { flex-direction:column; }
-  .search-box { width:100%; }
-  .quiz-question { font-size:17px; }
+  .main {
+    margin-left:0;
+    padding: 60px 10px 20px;
+    padding-top: calc(60px + env(safe-area-inset-top));
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    max-width:100%;
+    width:100%;
+  }
+  .mobile-header {
+    display:flex;
+    padding-top: env(safe-area-inset-top);
+  }
+  .stats { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .stat-card { padding:12px 8px; }
+  .stat-num { font-size:22px; }
+
+  /* Topbar: search + scrollable filters */
+  .topbar {
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .search-box { width:100%; min-width:0; padding:8px 12px; }
+  .topbar-filters {
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:4px;
+    width:100%;
+  }
+  .topbar-filters::-webkit-scrollbar { display:none; }
+  .topbar-btn {
+    padding:8px 12px;
+    font-size:12px;
+    flex-shrink:0;
+  }
+
+  /* Cards */
+  .card { margin-bottom:8px; border-radius:10px; }
+  .card-q { padding:12px 14px; gap:8px; }
+  .card-q-text { font-size:13px; }
+  .card-a-inner {
+    padding:10px 14px 12px;
+    font-size:12px;
+    line-height:1.6;
+    word-break:break-word;
+  }
+  .card-a-inner pre {
+    padding:10px;
+    font-size:11px;
+    border-radius:6px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .card-a-inner code { font-size:11px; }
+  .card-actions { padding:8px 12px; gap:4px; }
+  .status-btn { padding:7px 4px; font-size:11px; border-radius:6px; }
+
+  .section-header { font-size:11px; padding:10px 0 6px; }
+  .badge { font-size:9px; padding:2px 6px; }
+
+  /* Quiz */
+  .quiz-overlay { padding-top: env(safe-area-inset-top); }
+  .quiz-body {
+    padding:16px;
+    justify-content:flex-start;
+    padding-top:10vh;
+    overflow-y:auto;
+  }
+  .quiz-question { font-size:16px; margin-bottom:20px; }
+  .quiz-answer {
+    font-size:13px;
+    max-width:100%;
+    word-break:break-word;
+  }
+  .quiz-answer pre { font-size:11px; padding:10px; }
+  .quiz-reveal-btn { padding:12px 28px; font-size:14px; width:100%; }
+  .quiz-rate {
+    flex-direction:row;
+    width:100%;
+    gap:6px;
+  }
+  .quiz-rate button {
+    flex:1;
+    padding:10px 8px;
+    font-size:12px;
+  }
+
+  /* Dashboard */
+  .progress-bar { height:5px; }
 }
 
 /* Animations */
@@ -882,14 +968,16 @@ function renderMain() {
   const pctLearning = stats.total ? (stats.learning/stats.total*100) : 0;
 
   let html = `<div class="topbar">
-    <div class="search-box">&#128269;<input type="text" placeholder="Поиск вопросов..." value="${searchQuery}" oninput="onSearch(this.value)"></div>
-    <button class="topbar-btn ${filterStatus==='all'?'active':''}" onclick="setFilter('all')">Все</button>
-    <button class="topbar-btn ${filterStatus==='new'?'active':''}" onclick="setFilter('new')">Новые</button>
-    <button class="topbar-btn ${filterStatus==='hard'?'active':''}" onclick="setFilter('hard')">&#128308; Не знаю</button>
-    <button class="topbar-btn ${filterStatus==='learning'?'active':''}" onclick="setFilter('learning')">&#128992; Частично</button>
-    <button class="topbar-btn ${filterStatus==='known'?'active':''}" onclick="setFilter('known')">&#128994; Знаю</button>
-    <button class="topbar-btn" onclick="startQuiz()">&#127922; Quiz</button>
-    <button class="topbar-btn" onclick="startQuiz('hard')">&#128293; Повторить сложные</button>
+    <div class="search-box">&#128269;<input type="text" placeholder="Поиск..." value="${searchQuery}" oninput="onSearch(this.value)"></div>
+    <div class="topbar-filters">
+      <button class="topbar-btn ${filterStatus==='all'?'active':''}" onclick="setFilter('all')">Все</button>
+      <button class="topbar-btn ${filterStatus==='new'?'active':''}" onclick="setFilter('new')">Новые</button>
+      <button class="topbar-btn ${filterStatus==='hard'?'active':''}" onclick="setFilter('hard')">&#128308;</button>
+      <button class="topbar-btn ${filterStatus==='learning'?'active':''}" onclick="setFilter('learning')">&#128992;</button>
+      <button class="topbar-btn ${filterStatus==='known'?'active':''}" onclick="setFilter('known')">&#128994;</button>
+      <button class="topbar-btn" onclick="startQuiz()">&#127922; Quiz</button>
+      <button class="topbar-btn" onclick="startQuiz('hard')">&#128293; Сложные</button>
+    </div>
   </div>`;
 
   html += `<div class="progress-bar"><div class="seg-green" style="width:${pctKnown}%"></div><div class="seg-yellow" style="width:${pctLearning}%"></div></div>`;
