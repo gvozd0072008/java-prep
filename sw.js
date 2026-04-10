@@ -1,9 +1,9 @@
 const CACHE_NAME = 'java-prep-v1';
 const ASSETS = [
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  '/java-prep/index.html',
+  '/java-prep/manifest.json',
+  '/java-prep/icon-192.png',
+  '/java-prep/icon-512.png'
 ];
 
 self.addEventListener('install', e => {
