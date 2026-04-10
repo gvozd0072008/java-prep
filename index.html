@@ -1109,6 +1109,8 @@ function renderSidebar() {
   });
   html += `<div style="padding:16px 20px;border-top:1px solid var(--bg3);margin-top:12px">
     <button class="topbar-btn" style="width:100%;justify-content:center" onclick="toggleTheme()">&#9790; Тема</button>
+    <button class="topbar-btn" style="width:100%;justify-content:center;margin-top:8px" onclick="exportProgress()">&#128229; Экспорт</button>
+    <button class="topbar-btn" style="width:100%;justify-content:center;margin-top:8px" onclick="importProgress()">&#128228; Импорт</button>
     <button class="topbar-btn" style="width:100%;justify-content:center;margin-top:8px" onclick="resetProgress()">&#128260; Сбросить</button>
   </div>`;
   sb.innerHTML = html;
@@ -1348,6 +1350,49 @@ function resetProgress() {
     renderSidebar();
     renderMain();
   }
+}
+
+function exportProgress() {
+  var data = JSON.stringify(state, null, 2);
+  var blob = new Blob([data], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'java-prep-progress.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importProgress() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        var imported = JSON.parse(ev.target.result);
+        if (!imported.statuses) throw new Error('bad format');
+        var countNew = Object.keys(imported.statuses).length;
+        var countOld = Object.keys(state.statuses).length;
+        if (confirm('Импортировать ' + countNew + ' ответов? (сейчас: ' + countOld + ')\nТекущий прогресс будет объединён с импортированным.')) {
+          Object.keys(imported.statuses).forEach(function(k) {
+            state.statuses[k] = imported.statuses[k];
+          });
+          saveState();
+          renderSidebar();
+          renderMain();
+          alert('Импорт завершён!');
+        }
+      } catch(err) {
+        alert('Ошибка: неверный формат файла');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
 }
 
 // Keyboard
