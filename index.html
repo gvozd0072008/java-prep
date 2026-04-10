@@ -1124,10 +1124,20 @@ function renderDashboard(main) {
 // HELPERS
 // ============================================================
 function formatAnswer(text) {
+  const linkStyle = 'color:var(--accent2);word-break:break-all;text-decoration:underline';
   // URLs with protocol
-  text = text.replace(/(https?:\/\/[^\s<,;)"""']+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:var(--accent2);word-break:break-all">$1</a>');
-  // Domains without protocol (word.word.tld/path patterns, not inside href already)
-  text = text.replace(/(?<!href="|>)((?:[a-zA-Z0-9-]+\.)+(?:com|org|net|io|ru|dev|academy|app|edu|info|guide|sh)(?:\/[^\s<,;)"""']*)?)/g, '<a href="https://$1" target="_blank" rel="noopener" style="color:var(--accent2);word-break:break-all">$1</a>');
+  text = text.replace(/(https?:\/\/[^\s<,;"""']+)/g, (m) => {
+    const clean = m.replace(/[)]+$/, '');
+    const trail = m.slice(clean.length);
+    return `<a href="${clean}" target="_blank" rel="noopener" style="${linkStyle}">${clean}</a>${trail}`;
+  });
+  // Domains without protocol
+  text = text.replace(/(?<![/"a-z])((?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+(?:com|org|net|io|ru|dev|academy|app|edu|info|guide|sh)(?:\/[^\s<,;"""']*)?)/g, (m) => {
+    if (m.includes('</a>')) return m;
+    const clean = m.replace(/[)]+$/, '');
+    const trail = m.slice(clean.length);
+    return `<a href="https://${clean}" target="_blank" rel="noopener" style="${linkStyle}">${clean}</a>${trail}`;
+  });
   return text.replace(/\n/g, '<br>');
 }
 function esc(s) { return s.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
