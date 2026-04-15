@@ -2105,6 +2105,67 @@ function getAllStats() {
 }
 
 // ============================================================
+// READING / STUDY TIME ESTIMATION
+// Formula:
+//   words = plain_text_chars / 6 (Russian)
+//   read_minutes = words / 200 (technical text WPM)
+//   study_minutes = read*3 + code_blocks*2
+// ============================================================
+function getTopicTimeStats(topic) {
+  if (!topic || !topic.data) return {chars:0, words:0, readMin:0, studyMin:0, codeBlocks:0, questions:0, readMinDone:0, studyMinDone:0};
+  var chars = 0;
+  var codeBlocks = 0;
+  var qCount = 0;
+  var charsDone = 0;
+  var codeDone = 0;
+  var allData = getAllTopicData(topic);
+  allData.forEach(function(item) {
+    if (item.s) return;
+    if (!item.a) return;
+    qCount++;
+    var plain = item.a.replace(/<[^>]+>/g, '').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+    var cb = (item.a.match(/<pre><code>/g) || []).length;
+    chars += plain.length;
+    codeBlocks += cb;
+    var st = getStatus(topic.id, item.q);
+    if (st === 'known') {
+      charsDone += plain.length;
+      codeDone += cb;
+    }
+  });
+  var words = Math.round(chars / 6);
+  var readMin = Math.max(1, Math.round(chars / 6 / 200));
+  var studyMin = Math.round(readMin * 3 + codeBlocks * 2);
+  var wordsDone = Math.round(charsDone / 6);
+  var readMinDone = Math.round(charsDone / 6 / 200);
+  var studyMinDone = Math.round(readMinDone * 3 + codeDone * 2);
+  return {chars, words, readMin, studyMin, codeBlocks, questions: qCount, readMinDone, studyMinDone};
+}
+
+function getAllTimeStats() {
+  var total = {chars:0, words:0, readMin:0, studyMin:0, codeBlocks:0, readMinDone:0, studyMinDone:0};
+  TOPICS.forEach(function(t) {
+    if (t.id === 'links') return;
+    var s = getTopicTimeStats(t);
+    total.chars += s.chars;
+    total.words += s.words;
+    total.readMin += s.readMin;
+    total.studyMin += s.studyMin;
+    total.codeBlocks += s.codeBlocks;
+    total.readMinDone += s.readMinDone;
+    total.studyMinDone += s.studyMinDone;
+  });
+  return total;
+}
+
+function formatDuration(mins) {
+  if (mins < 60) return mins + ' мин';
+  var h = Math.floor(mins / 60);
+  var m = mins % 60;
+  return h + ' ч' + (m > 0 ? ' ' + m + ' мин' : '');
+}
+
+// ============================================================
 // RENDER
 // ============================================================
 function renderSidebar() {
@@ -2178,6 +2239,19 @@ function renderMain() {
   </div>`;
 
   html += `<div class="progress-bar"><div class="seg-green" style="width:${pctKnown}%"></div><div class="seg-yellow" style="width:${pctLearning}%"></div></div>`;
+
+  // Time estimation для этой темы
+  var topicTime = getTopicTimeStats(topic);
+  if (topicTime.chars > 0) {
+    var readPctTopic = topicTime.readMin > 0 ? Math.round(topicTime.readMinDone / topicTime.readMin * 100) : 0;
+    html += '<div style="display:flex;gap:16px;flex-wrap:wrap;padding:8px 12px;background:var(--bg2);border:1px solid var(--bg3);border-radius:8px;margin-bottom:12px;font-size:12px;color:var(--text2)">';
+    html += '<span>\uD83D\uDCD6 Чтение: <b style="color:var(--accent2)">' + formatDuration(topicTime.readMin) + '</b></span>';
+    html += '<span>\uD83C\uDF93 Изучение: <b style="color:var(--orange)">' + formatDuration(topicTime.studyMin) + '</b></span>';
+    html += '<span>\uD83D\uDCDD ' + topicTime.words.toLocaleString("ru") + ' слов</span>';
+    if (topicTime.codeBlocks > 0) html += '<span>\uD83D\uDCBB ' + topicTime.codeBlocks + ' код-блоков</span>';
+    if (readPctTopic > 0) html += '<span>\u2705 Пройдено: <b style="color:var(--green)">' + readPctTopic + '%</b></span>';
+    html += '</div>';
+  }
 
   // Resources block for this topic (always rendered, collapsed by default)
   var topicResources = getTopicResources(topic.id);
@@ -2415,6 +2489,30 @@ function renderDashboard(main) {
     html += '</div>';
   }
 
+  // Study time estimation
+  var totalTime = getAllTimeStats();
+  var readPct = totalTime.readMin > 0 ? Math.round(totalTime.readMinDone / totalTime.readMin * 100) : 0;
+  html += '<div class="dash-card"><h3>\u23F1 Время изучения</h3>';
+  html += '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">';
+  html += '<div style="flex:1;min-width:120px"><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px">Всего читать</div>';
+  html += '<div style="font-size:22px;font-weight:700;color:var(--accent2)">' + formatDuration(totalTime.readMin) + '</div></div>';
+  html += '<div style="flex:1;min-width:120px"><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px">Полное изучение</div>';
+  html += '<div style="font-size:22px;font-weight:700;color:var(--orange)">' + formatDuration(totalTime.studyMin) + '</div></div>';
+  html += '<div style="flex:1;min-width:120px"><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px">Слов в тексте</div>';
+  html += '<div style="font-size:22px;font-weight:700">' + totalTime.words.toLocaleString("ru") + '</div></div>';
+  html += '<div style="flex:1;min-width:120px"><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px">Код-блоков</div>';
+  html += '<div style="font-size:22px;font-weight:700">' + totalTime.codeBlocks + '</div></div>';
+  html += '</div>';
+  html += '<div style="font-size:13px;color:var(--text2);margin-bottom:6px">Прогресс изучения (по статусу «Знаю»):</div>';
+  html += '<div class="progress-bar" style="height:8px;margin-bottom:8px"><div class="seg-green" style="width:' + readPct + '%"></div></div>';
+  html += '<div style="font-size:13px;color:var(--text2)">Прочитано: <b style="color:var(--text)">' + formatDuration(totalTime.readMinDone) + '</b> из ' + formatDuration(totalTime.readMin) + ' <span style="color:var(--green)">(' + readPct + '%)</span></div>';
+  html += '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--bg3);font-size:12px;color:var(--text2);line-height:1.6">';
+  html += '<b style="color:var(--text)">\uD83D\uDCCA Планы обучения:</b><br>';
+  html += '\u2022 Интенсив (1 нед.) по 7 ч/день: Core + Spring + SQL + Threads + Архитектура<br>';
+  html += '\u2022 Сбалансированный (2 нед.) по 4 ч/день: + JPA + Паттерны + Kafka + Алгоритмы<br>';
+  html += '\u2022 Полный (4 нед.) по 2 ч/день: все темы, ' + Math.ceil(totalTime.studyMin / 60 / 2) + ' занятий';
+  html += '</div></div>';
+
   // Test history
   var testData = JSON.parse(localStorage.getItem("java-prep-tests") || '{"history":[],"bestStreak":0,"totalTests":0,"totalCorrect":0,"totalAnswered":0}');
   if (testData.totalTests > 0) {
@@ -2455,10 +2553,12 @@ function renderDashboard(main) {
     const s = getTopicStats(t);
     const pct = s.total ? Math.round(s.known/s.total*100) : 0;
     var deps = getRelatedTopics(t.id);
+    var ts = getTopicTimeStats(t);
     var depHtml = deps.length > 0 ? '<div style="font-size:11px;color:var(--text2);margin-top:4px">Связи: ' + deps.map(function(d){ var tt=TOPICS.find(function(x){return x.id===d;}); return tt?tt.name:d; }).join(', ') + '</div>' : '';
+    var timeHtml = ts.chars > 0 ? '<span style="font-size:11px;color:var(--text2);margin-left:8px">\uD83D\uDCD6 ' + formatDuration(ts.readMin) + ' \u2022 \uD83C\uDF93 ' + formatDuration(ts.studyMin) + '</span>' : '';
     html += '<div style="background:var(--bg2);border:1px solid var(--bg3);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;cursor:pointer" onclick="navigate(\'' + t.id + '\')">';
-    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
-    html += '<span>' + t.icon + ' <b>' + t.name + '</b></span>';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px">';
+    html += '<span>' + t.icon + ' <b>' + t.name + '</b>' + timeHtml + '</span>';
     html += '<span style="color:var(--text2);font-size:13px">' + s.known + '/' + s.total + ' (' + pct + '%)</span>';
     html += '</div>';
     html += '<div class="progress-bar" style="margin:0;height:4px"><div class="seg-green" style="width:' + (s.total?(s.known/s.total*100):0) + '%"></div><div class="seg-yellow" style="width:' + (s.total?(s.learning/s.total*100):0) + '%"></div></div>';
