@@ -557,6 +557,7 @@ input { font:inherit; color:inherit; }
   background:var(--bg2); border:1px solid var(--bg3); border-radius:var(--radius);
   padding:24px; max-width:400px; width:90%; text-align:center;
 }
+.cardLvlBtn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
 .share-text {
   width:100%; padding:12px; border:1px solid var(--bg3); border-radius:8px;
   background:var(--bg); color:var(--text); font:inherit; font-size:13px;
@@ -809,6 +810,28 @@ input { font:inherit; color:inherit; }
   </div>
   <textarea class="sandbox-editor" id="sandboxEditor" placeholder="// Напишите ваше решение здесь..." spellcheck="false"></textarea>
   <div class="sandbox-reference" id="sandboxRef" style="display:none"></div>
+</div>
+
+<div class="share-modal" id="cardEditorModal" onclick="closeCardEditor(event)">
+  <div class="share-content" onclick="event.stopPropagation()" style="max-width:600px">
+    <h3 style="margin-bottom:12px" id="cardEditorTitle">&#10133; Новая карточка</h3>
+    <div style="text-align:left">
+      <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:4px">Вопрос</label>
+      <textarea id="cardEditorQ" class="share-text" rows="3" style="text-align:left;resize:vertical" placeholder="Что такое..."></textarea>
+      <label style="font-size:13px;color:var(--text2);display:block;margin:8px 0 4px">Ответ</label>
+      <textarea id="cardEditorA" class="share-text" rows="8" style="text-align:left;resize:vertical;font-family:inherit" placeholder="Подробный ответ..."></textarea>
+      <label style="font-size:13px;color:var(--text2);display:block;margin:8px 0 4px">Уровень</label>
+      <div style="display:flex;gap:8px">
+        <button type="button" class="topbar-btn cardLvlBtn" data-lvl="1" onclick="selectCardLvl(1)" style="flex:1;justify-content:center">L1 Junior</button>
+        <button type="button" class="topbar-btn cardLvlBtn active" data-lvl="2" onclick="selectCardLvl(2)" style="flex:1;justify-content:center">L2 Middle</button>
+        <button type="button" class="topbar-btn cardLvlBtn" data-lvl="3" onclick="selectCardLvl(3)" style="flex:1;justify-content:center">L3 Senior</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="topbar-btn" onclick="closeCardEditor()" style="flex:1;justify-content:center">Отмена</button>
+      <button class="test-start-btn" onclick="saveCardEditor()" style="flex:2">&#128190; Сохранить</button>
+    </div>
+  </div>
 </div>
 
 <div class="share-modal" id="shareModal" onclick="closeShareModal(event)">
@@ -1586,11 +1609,44 @@ const SRS_KEY = 'java-prep-srs';
 const ACTIVITY_KEY = 'java-prep-activity';
 const BOOKMARKS_KEY = 'java-prep-bookmarks';
 const NOTES_KEY = 'java-prep-notes';
+const CUSTOM_CARDS_KEY = 'java-prep-custom';
 let state = loadState();
 let srsData = loadSRS();
 let activityData = loadActivity();
 let bookmarksData = loadBookmarks();
 let notesData = loadNotes();
+let customCards = loadCustomCards();
+
+function loadCustomCards() {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_CARDS_KEY)) || {}; } catch { return {}; }
+}
+function saveCustomCards() { localStorage.setItem(CUSTOM_CARDS_KEY, JSON.stringify(customCards)); }
+
+function addCustomCard(topicId, q, a, lvl) {
+  if (!customCards[topicId]) customCards[topicId] = [];
+  var id = 'cust_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  customCards[topicId].push({id:id, q:q, a:a, lvl:lvl||2, custom:true});
+  saveCustomCards();
+  return id;
+}
+function updateCustomCard(topicId, id, q, a, lvl) {
+  if (!customCards[topicId]) return;
+  var card = customCards[topicId].find(function(c){return c.id===id;});
+  if (card) { card.q = q; card.a = a; card.lvl = lvl; saveCustomCards(); }
+}
+function deleteCustomCard(topicId, id) {
+  if (!customCards[topicId]) return;
+  customCards[topicId] = customCards[topicId].filter(function(c){return c.id!==id;});
+  saveCustomCards();
+}
+function getCustomCards(topicId) {
+  return customCards[topicId] || [];
+}
+function getAllTopicData(topic) {
+  var custom = getCustomCards(topic.id);
+  if (custom.length === 0) return topic.data;
+  return topic.data.concat([{s:'\u270F\uFE0F Мои карточки'}]).concat(custom);
+}
 let currentTopic = state.lastTopic || 'core';
 let searchQuery = '';
 let filterStatus = 'all';
@@ -1826,7 +1882,8 @@ function getWeakTopics() {
 // ============================================================
 function getTopicStats(topic) {
   let total=0, known=0, learning=0, hard=0;
-  topic.data.forEach(item => {
+  var allData = getAllTopicData(topic);
+  allData.forEach(item => {
     if (item.s) return;
     total++;
     const st = getStatus(topic.id, item.q);
@@ -1910,8 +1967,11 @@ function renderMain() {
 
   html += `<div class="progress-bar"><div class="seg-green" style="width:${pctKnown}%"></div><div class="seg-yellow" style="width:${pctLearning}%"></div></div>`;
 
+  html += `<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="topbar-btn" onclick="openCardEditor('${topic.id}')" style="background:var(--accent);color:#fff;border-color:var(--accent)">&#10133; Добавить свою карточку</button></div>`;
+
   let visibleCount = 0;
-  topic.data.forEach((item, i) => {
+  var allData = getAllTopicData(topic);
+  allData.forEach((item, i) => {
     if (item.s) {
       html += `<div class="section-header">${item.s}</div>`;
       return;
@@ -1934,15 +1994,17 @@ function renderMain() {
 function renderCard(topicId, item, idx, st) {
   const stClass = st !== 'new' ? `status-${st}` : '';
   const hotBadge = item.hot ? '<span class="badge badge-hot">&#128293; HOT</span>' : '';
+  const customBadge = item.custom ? '<span class="badge" style="background:rgba(108,92,231,0.15);color:var(--accent2)">&#9999;&#65039; Моя</span>' : '';
   const lvlBadge = item.lvl ? '<span class="badge badge-l'+item.lvl+'">L'+item.lvl+'</span>' : '';
   const qKey = getQKey(topicId, item.q);
   const bm = isBookmarked(qKey);
   const note = getNote(qKey);
   const srsCard = srsData[qKey];
   const srsInfo = srsCard ? ` <span class="badge" style="background:rgba(108,92,231,0.12);color:var(--accent2)" title="Следующее повторение">\u23F0 ${new Date(srsCard.nextReview).toLocaleDateString("ru")}</span>` : '';
+  const editActions = item.custom ? `<div style="padding:8px 16px;border-top:1px solid var(--bg3);display:flex;gap:8px"><button class="topbar-btn" style="flex:1;justify-content:center" onclick="openCardEditor('${topicId}','${item.id}')">&#9999;&#65039; Редактировать</button><button class="topbar-btn" style="flex:1;justify-content:center;color:var(--red)" onclick="confirmDeleteCustom('${topicId}','${item.id}')">&#128465; Удалить</button></div>` : '';
   return `<div class="card ${stClass}" id="card-${topicId}-${idx}">
     <div class="card-q" onclick="toggleCard('${topicId}',${idx})">
-      <span class="card-q-text">${item.q} ${lvlBadge} ${hotBadge}${srsInfo}</span>
+      <span class="card-q-text">${item.q} ${lvlBadge} ${hotBadge}${customBadge}${srsInfo}</span>
       <button class="bookmark-btn ${bm?'active':''}" onclick="event.stopPropagation();toggleBookmark('${esc(qKey)}')" title="Закладка">${bm?'\u2605':'\u2606'}</button>
       <span class="card-arrow">&#9654;</span>
     </div>
@@ -1954,6 +2016,7 @@ function renderCard(topicId, item, idx, st) {
         <button class="status-btn btn-known ${st==='known'?'selected':''}" onclick="rate('${topicId}','${esc(item.q)}','known')">&#128994; Знаю</button>
       </div>
       ${(topicId === 'live' || topicId === 'algo') ? '<div style="padding:8px 16px;border-top:1px solid var(--bg3)"><button class="topbar-btn" style="width:100%;justify-content:center" onclick="openSandbox(\''+esc(item.q)+'\',\''+esc(item.a||'')+'\')">&#128187; Открыть редактор кода</button></div>' : ''}
+      ${editActions}
       <div class="note-area">
         <textarea class="note-input" placeholder="Ваша заметка..." onblur="saveNote('${esc(qKey)}',this.value)">${note.replace(/</g,'&lt;')}</textarea>
       </div>
@@ -2174,7 +2237,8 @@ function startQuiz(mode) {
   quizQueue = [];
   const topics = currentTopic === 'dashboard' ? TOPICS : TOPICS.filter(t => t.id === currentTopic);
   topics.forEach(t => {
-    t.data.forEach(item => {
+    var allData = getAllTopicData(t);
+    allData.forEach(item => {
       if (item.s) return;
       const st = getStatus(t.id, item.q);
       if (mode === 'hard' && st !== 'hard') return;
@@ -2751,6 +2815,77 @@ function setupTestSwipe() {
 }
 
 // ============================================================
+// CUSTOM CARD EDITOR
+// ============================================================
+var editorState = null; // {topicId, cardId (null for new), lvl}
+
+function openCardEditor(topicId, cardId) {
+  editorState = {topicId: topicId, cardId: cardId || null, lvl: 2};
+  var title = cardId ? '&#9999;&#65039; Редактировать карточку' : '&#10133; Новая карточка';
+  document.getElementById("cardEditorTitle").innerHTML = title;
+  if (cardId) {
+    var card = (customCards[topicId] || []).find(function(c){return c.id===cardId;});
+    if (card) {
+      document.getElementById("cardEditorQ").value = card.q;
+      document.getElementById("cardEditorA").value = card.a;
+      editorState.lvl = card.lvl || 2;
+    }
+  } else {
+    document.getElementById("cardEditorQ").value = "";
+    document.getElementById("cardEditorA").value = "";
+  }
+  selectCardLvl(editorState.lvl);
+  document.getElementById("cardEditorModal").classList.add("active");
+  setTimeout(function(){ document.getElementById("cardEditorQ").focus(); }, 50);
+}
+
+function selectCardLvl(lvl) {
+  if (editorState) editorState.lvl = lvl;
+  document.querySelectorAll(".cardLvlBtn").forEach(function(b){
+    b.classList.toggle("active", parseInt(b.getAttribute("data-lvl")) === lvl);
+  });
+}
+
+function saveCardEditor() {
+  if (!editorState) return;
+  var q = document.getElementById("cardEditorQ").value.trim();
+  var a = document.getElementById("cardEditorA").value.trim();
+  if (!q) { alert("Введите вопрос"); return; }
+  if (!a) { alert("Введите ответ"); return; }
+  if (editorState.cardId) {
+    updateCustomCard(editorState.topicId, editorState.cardId, q, a, editorState.lvl);
+  } else {
+    addCustomCard(editorState.topicId, q, a, editorState.lvl);
+  }
+  closeCardEditor();
+  renderMain();
+  renderSidebar();
+}
+
+function closeCardEditor(e) {
+  if (!e || e.target === document.getElementById("cardEditorModal")) {
+    document.getElementById("cardEditorModal").classList.remove("active");
+    editorState = null;
+  }
+}
+
+function confirmDeleteCustom(topicId, cardId) {
+  if (!confirm("Удалить эту карточку? Это действие необратимо.")) return;
+  var card = (customCards[topicId] || []).find(function(c){return c.id===cardId;});
+  if (card) {
+    var qKey = getQKey(topicId, card.q);
+    delete state.statuses[qKey];
+    delete bookmarksData[qKey];
+    delete notesData[qKey];
+    delete srsData[qKey];
+    saveState(); saveBookmarks(); saveNotes(); saveSRS();
+  }
+  deleteCustomCard(topicId, cardId);
+  renderMain();
+  renderSidebar();
+}
+
+// ============================================================
 // SRS REVIEW MODE
 // ============================================================
 var srsQueue = [];
@@ -3215,12 +3350,20 @@ function resetProgress() {
 }
 
 function exportProgress() {
-  var data = JSON.stringify(state, null, 2);
+  var payload = {
+    statuses: state.statuses,
+    customCards: customCards,
+    bookmarks: bookmarksData,
+    notes: notesData,
+    srs: srsData,
+    activity: activityData
+  };
+  var data = JSON.stringify(payload, null, 2);
   var blob = new Blob([data], {type:'application/json'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
-  a.download = 'java-prep-progress.json';
+  a.download = 'java-prep-backup-' + new Date().toISOString().slice(0,10) + '.json';
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -3239,10 +3382,25 @@ function importProgress() {
         if (!imported.statuses) throw new Error('bad format');
         var countNew = Object.keys(imported.statuses).length;
         var countOld = Object.keys(state.statuses).length;
-        if (confirm('Импортировать ' + countNew + ' ответов? (сейчас: ' + countOld + ')\nТекущий прогресс будет объединён с импортированным.')) {
-          Object.keys(imported.statuses).forEach(function(k) {
-            state.statuses[k] = imported.statuses[k];
-          });
+        var customCount = imported.customCards ? Object.values(imported.customCards).reduce(function(s,a){return s+a.length;},0) : 0;
+        if (confirm('Импортировать данные?\nСтатусов: ' + countNew + ' (сейчас: ' + countOld + ')\nКастомных карточек: ' + customCount + '\n\nВсё будет объединено с текущим прогрессом.')) {
+          Object.keys(imported.statuses).forEach(function(k) { state.statuses[k] = imported.statuses[k]; });
+          if (imported.customCards) {
+            Object.keys(imported.customCards).forEach(function(tid) {
+              if (!customCards[tid]) customCards[tid] = [];
+              imported.customCards[tid].forEach(function(c) {
+                if (!customCards[tid].find(function(x){return x.id===c.id;})) customCards[tid].push(c);
+              });
+            });
+            saveCustomCards();
+          }
+          if (imported.bookmarks) { Object.assign(bookmarksData, imported.bookmarks); saveBookmarks(); }
+          if (imported.notes) { Object.assign(notesData, imported.notes); saveNotes(); }
+          if (imported.srs) { Object.assign(srsData, imported.srs); saveSRS(); }
+          if (imported.activity && imported.activity.days) {
+            Object.keys(imported.activity.days).forEach(function(k) { if (!activityData.days[k]) activityData.days[k] = imported.activity.days[k]; });
+            saveActivity();
+          }
           saveState();
           renderSidebar();
           renderMain();
@@ -3260,6 +3418,7 @@ function importProgress() {
 // Keyboard
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
+    if (document.getElementById('cardEditorModal').classList.contains('active')) { closeCardEditor(); return; }
     if (document.getElementById('shareModal').classList.contains('active')) { closeShareModal(); return; }
     if (document.getElementById('sandboxOverlay').classList.contains('active')) { closeSandbox(); return; }
     if (document.getElementById('interviewOverlay').classList.contains('active')) { closeInterview(); return; }
